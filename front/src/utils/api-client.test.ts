@@ -25,7 +25,7 @@ describe("Create a Card", () => {
       data: {
         titulo: "Test Card",
         conteudo: "Test Card Description",
-        lista: "todo",
+        lista: "ToDo",
       },
     };
     const response = await request("/cards", options);

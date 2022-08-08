@@ -5,7 +5,7 @@ import ICard from "../types/card.type";
 const card: ICard = {
   titulo: "Titulo",
   conteudo: "Conteudo",
-  lista: "todo",
+  lista: "ToDo",
 };
 
 afterEach(cleanup);

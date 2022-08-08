@@ -5,7 +5,7 @@ function Card({
   setCard,
 }: {
   card: ICard;
-  setCard: (card: ICard) => ICard;
+  setCard: (card: ICard) => void;
 }) {
   return (
     <div className="Card">

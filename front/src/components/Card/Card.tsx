@@ -1,19 +1,20 @@
 import React, { useState } from "react";
 import {
+  FaBan,
   FaEdit,
-  FaTrashAlt,
-  FaPlusCircle,
   FaChevronCircleLeft,
   FaChevronCircleRight,
+  FaPlusCircle,
   FaSave,
-  FaBan,
+  FaTrashAlt,
 } from "react-icons/fa";
 import { ICard, Lista } from "../../types/card.type";
 import {
-  CardContainer,
-  CardHeader,
   CardBody,
+  CardContainer,
   CardFooter,
+  CardForm,
+  CardHeader,
   CardTitle,
   IconContainer,
 } from "./Card.styles";
@@ -91,7 +92,7 @@ function Card({ card, handleCreate, handleUpdate, handleDelete }: ICardProps) {
   return (
     <CardContainer>
       {!values.id || isEditing ? (
-        <form>
+        <CardForm>
           <input
             name="titulo"
             type="text"
@@ -107,7 +108,7 @@ function Card({ card, handleCreate, handleUpdate, handleDelete }: ICardProps) {
           />
           {!values.id ? (
             <IconContainer onClick={createCard}>
-              <FaPlusCircle title="Adicionar" /> Adicionar
+              <FaPlusCircle title="Adicionar" />
             </IconContainer>
           ) : (
             <CardFooter>
@@ -123,7 +124,7 @@ function Card({ card, handleCreate, handleUpdate, handleDelete }: ICardProps) {
               </IconContainer>
             </CardFooter>
           )}
-        </form>
+        </CardForm>
       ) : (
         <>
           <CardHeader>

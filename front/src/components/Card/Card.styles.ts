@@ -46,6 +46,14 @@ export const CardText = styled.p`
   margin-bottom: 10px;
 `;
 
+export const CardForm = styled.form`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 20px;
+  width: 100%;
+`;
+
 export const IconContainer = styled.div<{ hidden?: boolean }>`
   align-items: center;
   border-radius: 4px;

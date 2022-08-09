@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FiEdit } from "react-icons/fi";
+import { FaEdit, FaTrashAlt, FaPlusCircle, FaChevronCircleLeft, FaChevronCircleRight } from "react-icons/fa";
 import ICard from "../types/card.type";
 
 interface ICardProps {
@@ -54,26 +54,20 @@ function Card({
       ) : (
         <>
           <h3>{values.titulo}</h3>
-          <FiEdit onClick={ () => setIsEditing(true)} />
+          <FaEdit onClick={() => setIsEditing(true)} />
           <p>{values.conteudo}</p>
         </>
       )}
       {!isNew ? (
-        isEditing ? (
-          <input
-            name="lista"
-            type="text"
-            placeholder="Lista"
-            value={values.lista}
-            onChange={onChange}
-          />
-        ) : (
-          <p>{values.lista}</p>
-        )
+        ! isEditing && (
+          <>
+            <FaChevronCircleLeft />
+            <FaTrashAlt />
+            <FaChevronCircleRight />
+          </>
+        ) 
       ) : (
-        <button type="button" onClick={createCard}>
-          +
-        </button>
+        <FaPlusCircle onClick={createCard} />
       )}
     </form>
   );

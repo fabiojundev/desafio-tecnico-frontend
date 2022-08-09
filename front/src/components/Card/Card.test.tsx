@@ -1,8 +1,9 @@
-import { render, screen, cleanup } from "@testing-library/react";
+import { render, screen, cleanup, fireEvent } from "@testing-library/react";
 import Card from "./Card";
 import ICard from "../../types/card.type";
 
 const card: ICard = {
+  id: "uuid-123",
   titulo: "Titulo",
   conteudo: "Conteudo",
   lista: "ToDo",
@@ -14,11 +15,10 @@ const handleCreate = jest.fn();
 const handleUpdate = jest.fn();
 const handleDelete = jest.fn();
 
-const customRender = (card: ICard, isNew?: boolean) => {
+const customRender = (card: ICard) => {
   render(
     <Card
       card={card}
-      isNew={isNew}
       handleCreate={handleCreate}
       handleUpdate={handleUpdate}
       handleDelete={handleDelete}
@@ -27,27 +27,49 @@ const customRender = (card: ICard, isNew?: boolean) => {
 };
 
 describe("Card", () => {
-  it("Renders Card on read mode", () => {
+  it("Renders create card", () => {
+    customRender({
+      ...card,
+      id: "",
+      lista: "",
+    });
+
+    expect(screen.getByPlaceholderText(/Título/i)).toHaveValue(card.titulo);
+
+    expect(screen.getByPlaceholderText(/Conteúdo/i)).toHaveValue(card.conteudo);
+
+    expect(screen.queryByTitle(/Adicionar/i)).toBeInTheDocument();
+  });
+
+  it("Renders card on read mode", () => {
     customRender(card);
-    const title = screen.getByPlaceholderText(/Título/i);
-    expect(title).toHaveValue(card.titulo);
 
-    const conteudo = screen.getByPlaceholderText(/Conteúdo/i);
-    expect(conteudo).toHaveValue(card.conteudo);
+    expect(screen.queryByTitle(/Título/i)).toBeInTheDocument();
 
-    const lista = screen.getByPlaceholderText(/Lista/i);
-    expect(lista).toHaveValue(card.lista);
+    expect(screen.queryByTitle(/Conteúdo/i)).toBeInTheDocument();
+
+    expect(screen.queryByTitle(/Editar/i)).toBeInTheDocument();
+
+    expect(screen.queryByTitle(/Mover p\/ Esquerda/i)).toBeInTheDocument();
+
+    expect(screen.queryByTitle(/Excluir/i)).toBeInTheDocument();
+
+    expect(screen.queryByTitle(/Mover p\/ Direita/i)).toBeInTheDocument();
   });
 
-  it("Renders create Card", () => {
-    card.lista = "";
-    customRender(card, true);
-    const title = screen.getByPlaceholderText(/Título/i);
-    expect(title).toHaveValue(card.titulo);
+  it("Renders card on edit mode", () => {
 
-    const conteudo = screen.getByPlaceholderText(/Conteúdo/i);
-    expect(conteudo).toHaveValue(card.conteudo);
+    customRender(card);
 
-    expect(screen.queryByPlaceholderText(/Lista/i)).not.toBeInTheDocument();
+    fireEvent.click(screen.getByTitle(/Editar/i));
+
+    expect(screen.getByPlaceholderText(/Título/i)).toHaveValue(card.titulo);
+
+    expect(screen.getByPlaceholderText(/Conteúdo/i)).toHaveValue(card.conteudo);
+
+    expect(screen.queryByTitle(/Cancelar/i)).toBeInTheDocument();
+
+    expect(screen.queryByTitle(/Salvar/i)).toBeInTheDocument();
   });
+
 });

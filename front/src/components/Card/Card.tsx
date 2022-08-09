@@ -5,13 +5,14 @@ import {
   FaPlusCircle,
   FaChevronCircleLeft,
   FaChevronCircleRight,
+  FaSave,
+  FaBan,
 } from "react-icons/fa";
 import ICard from "../../types/card.type";
 import { CardContainer, IconContainer } from "./Card.styles";
 
 interface ICardProps {
   card: ICard;
-  isNew?: boolean;
   handleCreate: (card: ICard) => void;
   handleUpdate: (card: ICard) => void;
   handleDelete: (card: ICard) => void;
@@ -19,7 +20,6 @@ interface ICardProps {
 
 function Card({
   card,
-  isNew,
   handleCreate,
   handleUpdate,
   handleDelete,
@@ -33,6 +33,7 @@ function Card({
   };
 
   const createCard = () => {
+    console.log("createCard", values);
     handleCreate({
       ...values,
       lista: "ToDo",
@@ -41,46 +42,42 @@ function Card({
 
   return (
     <CardContainer>
-      <form>
-        {isNew || isEditing ? (
-          <>
-            <input
-              name="titulo"
-              type="text"
-              placeholder="Título"
-              value={values.titulo}
-              onChange={onChange}
-            />
-            <textarea
-              name="conteudo"
-              placeholder="Conteúdo"
-              onChange={onChange}
-            >
-              {values.conteudo}
-            </textarea>
-
-          </>
-        ) : (
-          <>
-            <h3>{values.titulo}</h3>
-            <FaEdit onClick={() => setIsEditing(true)} />
-            <p>{values.conteudo}</p>
-          </>
-        )}
-        {!isNew ? (
-          !isEditing && (
+      {!values.id || isEditing ? (
+        <form>
+          <input
+            name="titulo"
+            type="text"
+            placeholder="Título"
+            value={values.titulo}
+            onChange={onChange}
+          />
+          <textarea
+            name="conteudo"
+            placeholder="Conteúdo"
+            onChange={onChange}
+            value={values.conteudo}
+          />
+          {!values.id ? (
+            <IconContainer onClick={createCard}>
+              <FaPlusCircle title="Adicionar" /> Adicionar
+            </IconContainer>
+          ) : (
             <>
-              <FaChevronCircleLeft />
-              <FaTrashAlt />
-              <FaChevronCircleRight />
+              <FaBan title="Cancelar"/>
+              <FaSave title="Salvar" />
             </>
-          )
-        ) : (
-          <IconContainer>
-            <FaPlusCircle onClick={createCard} /> Adicionar
-          </IconContainer>
-        )}
-      </form>
+          )}
+        </form>
+      ) : (
+        <>
+          <h3 title="Título">{values.titulo}</h3>
+          <FaEdit title="Editar" onClick={() => setIsEditing(true)} />
+          <p title="Conteúdo">{values.conteudo}</p>
+          <FaChevronCircleLeft title="Mover p/ Esquerda"/>
+          <FaTrashAlt title="Excluir"/>
+          <FaChevronCircleRight title="Mover p/ Direita"/>
+        </>
+      )}
     </CardContainer>
   );
 }

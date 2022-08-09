@@ -1,8 +1,8 @@
-type lista = "ToDo" | "Doing" | "Done" | "";
+type Lista = "ToDo" | "Doing" | "Done" | "";
 
 export default interface ICard {
   id?: string | null;
   titulo: string;
   conteudo: string;
-  lista: lista;
+  lista: Lista;
 }

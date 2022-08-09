@@ -44,6 +44,50 @@ function Card({ card, handleCreate, handleUpdate, handleDelete }: ICardProps) {
     });
   };
 
+  const handleLeftNav = () => {
+    let hidden = false;
+    if (values.lista === Lista.ToDo) {
+      hidden = true;
+    }
+    return hidden;
+  };
+
+  const handleRightNav = () => {
+    let hidden = false;
+    if (values.lista === Lista.Done) {
+      hidden = true;
+    }
+    return hidden;
+  };
+
+  const moveRight = () => {
+    let updated: ICard = { ...values };
+    switch (values.lista) {
+      case Lista.ToDo:
+        updated = { ...values, lista: Lista.Doing };
+        break;
+      case Lista.Doing:
+        updated = { ...values, lista: Lista.Done };
+        break;
+    }
+    setValues(updated);
+    handleUpdate(updated);
+  };
+
+  const moveLeft = () => {
+    let updated: ICard = { ...values };
+    switch (values.lista) {
+      case Lista.Doing:
+        updated = { ...values, lista: Lista.ToDo };
+        break;
+      case Lista.Done:
+        updated = { ...values, lista: Lista.Doing };
+        break;
+    }
+    setValues(updated);
+    handleUpdate(updated);
+  };
+
   return (
     <CardContainer>
       {!values.id || isEditing ? (
@@ -90,13 +134,13 @@ function Card({ card, handleCreate, handleUpdate, handleDelete }: ICardProps) {
           </CardHeader>
           <CardBody title="Conteúdo">{values.conteudo}</CardBody>
           <CardFooter>
-            <IconContainer>
+            <IconContainer hidden={handleLeftNav()} onClick={moveLeft}>
               <FaChevronCircleLeft title="Mover p/ Esquerda" />
             </IconContainer>
             <IconContainer onClick={() => handleDelete(values)}>
               <FaTrashAlt title="Excluir" />
             </IconContainer>
-            <IconContainer>
+            <IconContainer hidden={handleRightNav()} onClick={moveRight}>
               <FaChevronCircleRight title="Mover p/ Direita" />
             </IconContainer>
           </CardFooter>

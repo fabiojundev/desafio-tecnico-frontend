@@ -46,13 +46,15 @@ export const CardText = styled.p`
   margin-bottom: 10px;
 `;
 
-export const IconContainer = styled.div`
+export const IconContainer = styled.div<{ hidden?: boolean }>`
   align-items: center;
   border-radius: 4px;
   cursor: pointer;
   display: flex;
   font-size: 0.9rem;
   padding: 10px;
+  visibility: ${props => props.hidden ? "hidden" : "visible"};
+
   svg {
     cursor: pointer;
     font-size: 1.5rem;

@@ -64,6 +64,7 @@ function Card({ card, handleCreate, handleUpdate, handleDelete }: ICardProps) {
   const moveRight = () => {
     let updated: ICard = { ...values };
     switch (values.lista) {
+      default:
       case Lista.ToDo:
         updated = { ...values, lista: Lista.Doing };
         break;
@@ -78,6 +79,7 @@ function Card({ card, handleCreate, handleUpdate, handleDelete }: ICardProps) {
   const moveLeft = () => {
     let updated: ICard = { ...values };
     switch (values.lista) {
+      default:
       case Lista.Doing:
         updated = { ...values, lista: Lista.ToDo };
         break;
@@ -87,6 +89,16 @@ function Card({ card, handleCreate, handleUpdate, handleDelete }: ICardProps) {
     }
     setValues(updated);
     handleUpdate(updated);
+  };
+
+  const handleCancel = () => {
+    setValues(card);
+    setIsEditing(false);
+  };
+
+  const handleSave = () => {
+    handleUpdate(values);
+    setIsEditing(false);
   };
 
   return (
@@ -112,14 +124,10 @@ function Card({ card, handleCreate, handleUpdate, handleDelete }: ICardProps) {
             </IconContainer>
           ) : (
             <CardFooter>
-              <IconContainer
-                onClick={() => {
-                  setIsEditing(false);
-                }}
-              >
+              <IconContainer onClick={handleCancel}>
                 <FaBan title="Cancelar" />
               </IconContainer>
-              <IconContainer>
+              <IconContainer onClick={handleSave}>
                 <FaSave title="Salvar" />
               </IconContainer>
             </CardFooter>

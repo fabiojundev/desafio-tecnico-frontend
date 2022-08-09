@@ -38,23 +38,23 @@ describe("Card", () => {
 
     expect(screen.getByPlaceholderText(/Conteúdo/i)).toHaveValue(card.conteudo);
 
-    expect(screen.queryByTitle(/Adicionar/i)).toBeInTheDocument();
+    screen.getByTitle(/Adicionar/i);
   });
 
   it("Renders card on read mode", () => {
     customRender(card);
 
-    expect(screen.queryByTitle(/Título/i)).toBeInTheDocument();
+    screen.getByTitle(/Título/i);
 
-    expect(screen.queryByTitle(/Conteúdo/i)).toBeInTheDocument();
+    screen.getByTitle(/Conteúdo/i);
 
-    expect(screen.queryByTitle(/Editar/i)).toBeInTheDocument();
+    screen.getByTitle(/Editar/i);
 
-    expect(screen.queryByTitle(/Mover p\/ Esquerda/i)).toBeInTheDocument();
+    screen.getByTitle(/Mover p\/ Esquerda/i);
 
-    expect(screen.queryByTitle(/Excluir/i)).toBeInTheDocument();
+    screen.getByTitle(/Excluir/i);
 
-    expect(screen.queryByTitle(/Mover p\/ Direita/i)).toBeInTheDocument();
+    screen.getByTitle(/Mover p\/ Direita/i);
   });
 
   it("Renders card on edit mode", () => {
@@ -66,8 +66,8 @@ describe("Card", () => {
 
     expect(screen.getByPlaceholderText(/Conteúdo/i)).toHaveValue(card.conteudo);
 
-    expect(screen.queryByTitle(/Cancelar/i)).toBeInTheDocument();
+    screen.getByTitle(/Cancelar/i);
 
-    expect(screen.queryByTitle(/Salvar/i)).toBeInTheDocument();
+    screen.getByTitle(/Salvar/i);
   });
 });

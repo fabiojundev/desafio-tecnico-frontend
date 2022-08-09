@@ -61,7 +61,7 @@ export const IconContainer = styled.div<{ hidden?: boolean }>`
   display: flex;
   font-size: 0.9rem;
   padding: 10px;
-  visibility: ${props => props.hidden ? "hidden" : "visible"};
+  visibility: ${(props) => (props.hidden ? "hidden" : "visible")};
 
   svg {
     cursor: pointer;

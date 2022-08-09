@@ -80,8 +80,8 @@ function Card({ card, handleCreate, handleUpdate, handleDelete }: ICardProps) {
         <>
           <CardHeader>
             <CardTitle title="Título">{values.titulo}</CardTitle>
-            <IconContainer>
-              <FaEdit title="Editar" onClick={() => setIsEditing(true)} />
+            <IconContainer onClick={() => setIsEditing(true)} >
+              <FaEdit title="Editar" />
             </IconContainer>
           </CardHeader>
           <CardBody title="Conteúdo">
@@ -91,7 +91,7 @@ function Card({ card, handleCreate, handleUpdate, handleDelete }: ICardProps) {
             <IconContainer>
               <FaChevronCircleLeft title="Mover p/ Esquerda" />
             </IconContainer>
-            <IconContainer>
+            <IconContainer onClick={() => handleDelete(values)} >
               <FaTrashAlt title="Excluir" />
             </IconContainer>
             <IconContainer>

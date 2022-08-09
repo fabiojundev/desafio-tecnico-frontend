@@ -8,7 +8,7 @@ import {
   FaSave,
   FaTrashAlt,
 } from "react-icons/fa";
-import DomPurify from "dompurify";
+import DOMPurify from "dompurify";
 import { ICard, Lista, ICardError } from "../../types/card.type";
 import {
   CardBody,
@@ -21,6 +21,7 @@ import {
 } from "./Card.styles";
 
 import TextInput from "../TextInput/TextInput";
+import { marked } from "marked";
 
 interface ICardProps {
   card: ICard;
@@ -62,8 +63,8 @@ function Card({ card, handleCreate, handleUpdate, handleDelete }: ICardProps) {
   const sanitizeFields = () => {
     const sanitizedValues = {
       ...values,
-      titulo: DomPurify.sanitize(values.titulo.trim()),
-      conteudo: DomPurify.sanitize(values.conteudo.trim()),
+      titulo: DOMPurify.sanitize(values.titulo.trim()),
+      conteudo: DOMPurify.sanitize(values.conteudo.trim()),
     };
     setValues(sanitizedValues);
     return sanitizedValues;
@@ -185,7 +186,10 @@ function Card({ card, handleCreate, handleUpdate, handleDelete }: ICardProps) {
               <FaEdit title="Editar" />
             </IconContainer>
           </CardHeader>
-          <CardBody title="Conteúdo">{values.conteudo}</CardBody>
+          <CardBody 
+            title="Conteúdo"
+            dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(marked.parse(values.conteudo))}}
+          />
           <CardFooter>
             <IconContainer
               hidden={handleLeftNav()}

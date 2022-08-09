@@ -8,7 +8,8 @@ import {
   FaSave,
   FaTrashAlt,
 } from "react-icons/fa";
-import { ICard, Lista } from "../../types/card.type";
+import DomPurify from "dompurify";
+import { ICard, Lista, ICardError } from "../../types/card.type";
 import {
   CardBody,
   CardContainer,
@@ -19,15 +20,18 @@ import {
   IconContainer,
 } from "./Card.styles";
 
+import TextInput from "../TextInput/TextInput";
+
 interface ICardProps {
   card: ICard;
-  handleCreate: (card: ICard) => void;
-  handleUpdate: (card: ICard) => void;
-  handleDelete: (card: ICard) => void;
+  handleCreate: (card: ICard) => Promise<void>;
+  handleUpdate: (card: ICard) => Promise<void>;
+  handleDelete: (card: ICard) => Promise<void>;
 }
 
 function Card({ card, handleCreate, handleUpdate, handleDelete }: ICardProps) {
   const [values, setValues] = useState(card);
+  const [errors, setErrors] = useState<ICardError[]>([]);
   const [isEditing, setIsEditing] = useState(false);
 
   const onChange = (
@@ -37,12 +41,51 @@ function Card({ card, handleCreate, handleUpdate, handleDelete }: ICardProps) {
     setValues({ ...values, [name]: value });
   };
 
-  const createCard = () => {
-    console.log("createCard", values);
-    handleCreate({
+  const validateFields = () => {
+    let updatedErrors = [...errors];
+
+    if (!values.titulo) {
+      updatedErrors = [
+        ...updatedErrors,
+        { field: "titulo", msg: `O título é obrigatório` },
+      ];
+    }
+    if (!values.conteudo) {
+      updatedErrors = [
+        ...updatedErrors,
+        { field: "conteudo", msg: `O conteúdo é obrigatório` },
+      ];
+    }
+    setErrors(updatedErrors);
+  };
+
+  const sanitizeFields = () => {
+    const sanitizedValues = {
       ...values,
-      lista: Lista.ToDo,
-    });
+      titulo: DomPurify.sanitize(values.titulo.trim()),
+      conteudo: DomPurify.sanitize(values.conteudo.trim()),
+    };
+    setValues(sanitizedValues);
+    return sanitizedValues;
+  };
+
+  const createCard = async () => {
+    setErrors([]);
+    validateFields();
+    const values = sanitizeFields();
+
+    if (values.titulo && values.conteudo) {
+      try {
+        await handleCreate({
+          ...values,
+          lista: Lista.ToDo,
+        });
+        console.log("createCard", values);
+        setValues({ id: "", titulo: "", conteudo: "", lista: Lista.New });
+      } catch (error) {
+        console.log(error);
+      }
+    }
   };
 
   const handleLeftNav = () => {
@@ -105,12 +148,13 @@ function Card({ card, handleCreate, handleUpdate, handleDelete }: ICardProps) {
     <CardContainer>
       {!values.id || isEditing ? (
         <CardForm>
-          <input
+          <TextInput
             name="titulo"
             type="text"
             placeholder="Título"
             value={values.titulo}
             onChange={onChange}
+            errors={errors}
           />
           <textarea
             name="conteudo"
@@ -119,16 +163,16 @@ function Card({ card, handleCreate, handleUpdate, handleDelete }: ICardProps) {
             value={values.conteudo}
           />
           {!values.id ? (
-            <IconContainer onClick={createCard}>
-              <FaPlusCircle title="Adicionar" />
+            <IconContainer onClick={createCard} title="Adicionar">
+              <FaPlusCircle />
             </IconContainer>
           ) : (
             <CardFooter>
-              <IconContainer onClick={handleCancel}>
-                <FaBan title="Cancelar" />
+              <IconContainer onClick={handleCancel} title="Cancelar">
+                <FaBan />
               </IconContainer>
-              <IconContainer onClick={handleSave}>
-                <FaSave title="Salvar" />
+              <IconContainer onClick={handleSave} title="Salvar">
+                <FaSave />
               </IconContainer>
             </CardFooter>
           )}
@@ -143,14 +187,22 @@ function Card({ card, handleCreate, handleUpdate, handleDelete }: ICardProps) {
           </CardHeader>
           <CardBody title="Conteúdo">{values.conteudo}</CardBody>
           <CardFooter>
-            <IconContainer hidden={handleLeftNav()} onClick={moveLeft}>
-              <FaChevronCircleLeft title="Mover p/ Esquerda" />
+            <IconContainer
+              hidden={handleLeftNav()}
+              onClick={moveLeft}
+              title="Mover p/ Esquerda"
+            >
+              <FaChevronCircleLeft />
             </IconContainer>
-            <IconContainer onClick={() => handleDelete(values)}>
-              <FaTrashAlt title="Excluir" />
+            <IconContainer onClick={() => handleDelete(values)} title="Excluir">
+              <FaTrashAlt />
             </IconContainer>
-            <IconContainer hidden={handleRightNav()} onClick={moveRight}>
-              <FaChevronCircleRight title="Mover p/ Direita" />
+            <IconContainer
+              hidden={handleRightNav()}
+              onClick={moveRight}
+              title="Mover p/ Direita"
+            >
+              <FaChevronCircleRight />
             </IconContainer>
           </CardFooter>
         </>

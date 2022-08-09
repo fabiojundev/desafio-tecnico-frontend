@@ -58,7 +58,6 @@ describe("Card", () => {
   });
 
   it("Renders card on edit mode", () => {
-
     customRender(card);
 
     fireEvent.click(screen.getByTitle(/Editar/i));
@@ -71,5 +70,4 @@ describe("Card", () => {
 
     expect(screen.queryByTitle(/Salvar/i)).toBeInTheDocument();
   });
-
 });

@@ -9,7 +9,14 @@ import {
   FaBan,
 } from "react-icons/fa";
 import ICard from "../../types/card.type";
-import { CardContainer, IconContainer } from "./Card.styles";
+import {
+  CardContainer,
+  CardHeader,
+  CardBody,
+  CardFooter,
+  CardTitle,
+  IconContainer,
+} from "./Card.styles";
 
 interface ICardProps {
   card: ICard;
@@ -18,16 +25,13 @@ interface ICardProps {
   handleDelete: (card: ICard) => void;
 }
 
-function Card({
-  card,
-  handleCreate,
-  handleUpdate,
-  handleDelete,
-}: ICardProps) {
+function Card({ card, handleCreate, handleUpdate, handleDelete }: ICardProps) {
   const [values, setValues] = useState(card);
   const [isEditing, setIsEditing] = useState(false);
 
-  const onChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const onChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
     const { name, value } = e.target;
     setValues({ ...values, [name]: value });
   };
@@ -44,13 +48,13 @@ function Card({
     <CardContainer>
       {!values.id || isEditing ? (
         <form>
-          <input
-            name="titulo"
-            type="text"
-            placeholder="Título"
-            value={values.titulo}
-            onChange={onChange}
-          />
+            <input
+              name="titulo"
+              type="text"
+              placeholder="Título"
+              value={values.titulo}
+              onChange={onChange}
+            />
           <textarea
             name="conteudo"
             placeholder="Conteúdo"
@@ -62,20 +66,38 @@ function Card({
               <FaPlusCircle title="Adicionar" /> Adicionar
             </IconContainer>
           ) : (
-            <>
-              <FaBan title="Cancelar"/>
-              <FaSave title="Salvar" />
-            </>
+            <CardFooter>
+              <IconContainer onClick={() => { setIsEditing(false); }}>
+                <FaBan title="Cancelar" />
+              </IconContainer>
+              <IconContainer>
+                <FaSave title="Salvar" />
+              </IconContainer>
+            </CardFooter>
           )}
         </form>
       ) : (
         <>
-          <h3 title="Título">{values.titulo}</h3>
-          <FaEdit title="Editar" onClick={() => setIsEditing(true)} />
-          <p title="Conteúdo">{values.conteudo}</p>
-          <FaChevronCircleLeft title="Mover p/ Esquerda"/>
-          <FaTrashAlt title="Excluir"/>
-          <FaChevronCircleRight title="Mover p/ Direita"/>
+          <CardHeader>
+            <CardTitle title="Título">{values.titulo}</CardTitle>
+            <IconContainer>
+              <FaEdit title="Editar" onClick={() => setIsEditing(true)} />
+            </IconContainer>
+          </CardHeader>
+          <CardBody title="Conteúdo">
+            {values.conteudo}
+          </CardBody>
+          <CardFooter>
+            <IconContainer>
+              <FaChevronCircleLeft title="Mover p/ Esquerda" />
+            </IconContainer>
+            <IconContainer>
+              <FaTrashAlt title="Excluir" />
+            </IconContainer>
+            <IconContainer>
+              <FaChevronCircleRight title="Mover p/ Direita" />
+            </IconContainer>
+          </CardFooter>
         </>
       )}
     </CardContainer>

@@ -8,22 +8,21 @@ import {
 } from "../../utils/api-client";
 import ICard from "../../types/card.type";
 import { Card } from "../Card";
+import { BoardContainer, ListContainer, ListHeader, ListTitle } from "./Board.styles";
 
 function Board() {
   const [cards, setCards] = useState<ICard[]>([]);
 
   const getAllCards = async () => {
     const response = await getCards();
-    console.log("response", response);
+    console.log("getAllCards", response);
     if (response) {
       setCards(response);
     }
   };
 
   useEffect(() => {
-    if (cards.length === 0) {
-      getAllCards();
-    }
+    getAllCards();
   }, []);
 
   const handleCreate = async (card: ICard) => {
@@ -67,21 +66,24 @@ function Board() {
   ];
 
   return (
-    <div>
-      <div>
-        <h2>Novo</h2>
+    <BoardContainer>
+      <ListContainer>
+        <ListHeader>
+          <ListTitle>Novo</ListTitle>
+        </ListHeader>
         <Card
           card={newCard}
-          isNew
           handleCreate={handleCreate}
           handleUpdate={handleUpdate}
           handleDelete={handleDelete}
         />
-      </div>
-      <div>
+      </ListContainer>
+      <>
         {lists.map((list) => (
-          <div key={list.id}>
-            <h2>{list.label}</h2>
+          <ListContainer key={list.id}>
+            <ListHeader>
+              <ListTitle>{list.label}</ListTitle>
+            </ListHeader>
             {getListCards(list.id).map((card) => (
               <Card
                 key={card.id}
@@ -91,10 +93,10 @@ function Board() {
                 handleDelete={handleDelete}
               />
             ))}
-          </div>
+          </ListContainer>
         ))}
-      </div>
-    </div>
+      </>
+    </BoardContainer>
   );
 }
 

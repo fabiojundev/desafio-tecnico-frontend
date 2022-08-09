@@ -1,6 +1,6 @@
 import { render, screen, cleanup } from "@testing-library/react";
 import Card from "./Card";
-import ICard from "../types/card.type";
+import ICard from "../../types/card.type";
 
 const card: ICard = {
   titulo: "Titulo",
@@ -27,7 +27,7 @@ const customRender = (card: ICard, isNew?: boolean) => {
 };
 
 describe("Card", () => {
-  it("Renders Card", () => {
+  it("Renders Card on read mode", () => {
     customRender(card);
     const title = screen.getByPlaceholderText(/Título/i);
     expect(title).toHaveValue(card.titulo);

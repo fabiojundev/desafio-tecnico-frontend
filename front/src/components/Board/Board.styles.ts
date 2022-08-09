@@ -50,4 +50,3 @@ export const ListTitle = styled.h2`
 export const ListText = styled.p`
   margin-bottom: 10px;
 `;
-

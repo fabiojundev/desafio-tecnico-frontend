@@ -1,12 +1,12 @@
 import { render, screen, cleanup, fireEvent } from "@testing-library/react";
 import Card from "./Card";
-import ICard from "../../types/card.type";
+import { ICard, Lista } from "../../types/card.type";
 
 const card: ICard = {
   id: "uuid-123",
   titulo: "Titulo",
   conteudo: "Conteudo",
-  lista: "ToDo",
+  lista: Lista.ToDo,
 };
 
 afterEach(cleanup);
@@ -15,10 +15,10 @@ const handleCreate = jest.fn();
 const handleUpdate = jest.fn();
 const handleDelete = jest.fn();
 
-const customRender = (card: ICard) => {
+const customRender = (ocard: ICard) => {
   render(
     <Card
-      card={card}
+      card={ocard}
       handleCreate={handleCreate}
       handleUpdate={handleUpdate}
       handleDelete={handleDelete}
@@ -31,7 +31,7 @@ describe("Card", () => {
     customRender({
       ...card,
       id: "",
-      lista: "",
+      lista: Lista.New,
     });
 
     expect(screen.getByPlaceholderText(/Título/i)).toHaveValue(card.titulo);

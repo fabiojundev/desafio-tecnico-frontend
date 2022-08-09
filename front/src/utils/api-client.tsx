@@ -1,6 +1,6 @@
 import axios from "axios";
 import DOMPurify from "dompurify";
-import ICard from "../types/card.type";
+import { ICard } from "../types/card.type";
 
 const API_URL = "http://0.0.0.0:5000";
 

@@ -7,7 +7,7 @@ import {
   updateCard,
   deleteCard,
 } from "./api-client";
-import ICard from "../types/card.type";
+import { ICard, Lista } from "../types/card.type";
 
 describe("Make Request", () => {
   it("Verify if user is logged out", () => {
@@ -31,7 +31,7 @@ describe("Manage Cards", () => {
     const card: ICard = {
       titulo: "Test Card",
       conteudo: "Test Card Description",
-      lista: "ToDo",
+      lista: Lista.ToDo,
     };
 
     const response = await createCard(card);
@@ -43,7 +43,7 @@ describe("Manage Cards", () => {
     const changedCard: ICard = {
       titulo: "Test Card1",
       conteudo: "Test Card Description1",
-      lista: "Done",
+      lista: Lista.Doing,
     };
     const updatedCard = await updateCard({
       ...response,

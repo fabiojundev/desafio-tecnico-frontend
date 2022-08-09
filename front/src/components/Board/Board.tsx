@@ -6,9 +6,14 @@ import {
   updateCard,
   deleteCard,
 } from "../../utils/api-client";
-import ICard from "../../types/card.type";
+import { ICard, Lista } from "../../types/card.type";
 import { Card } from "../Card";
-import { BoardContainer, ListContainer, ListHeader, ListTitle } from "./Board.styles";
+import {
+  BoardContainer,
+  ListContainer,
+  ListHeader,
+  ListTitle,
+} from "./Board.styles";
 
 function Board() {
   const [cards, setCards] = useState<ICard[]>([]);
@@ -56,7 +61,7 @@ function Board() {
   const newCard: ICard = {
     titulo: "",
     conteudo: "",
-    lista: "",
+    lista: Lista.New,
   };
 
   const lists = [

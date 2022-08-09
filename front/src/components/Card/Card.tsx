@@ -8,7 +8,7 @@ import {
   FaSave,
   FaBan,
 } from "react-icons/fa";
-import ICard from "../../types/card.type";
+import { ICard, Lista } from "../../types/card.type";
 import {
   CardContainer,
   CardHeader,
@@ -40,7 +40,7 @@ function Card({ card, handleCreate, handleUpdate, handleDelete }: ICardProps) {
     console.log("createCard", values);
     handleCreate({
       ...values,
-      lista: "ToDo",
+      lista: Lista.ToDo,
     });
   };
 
@@ -48,13 +48,13 @@ function Card({ card, handleCreate, handleUpdate, handleDelete }: ICardProps) {
     <CardContainer>
       {!values.id || isEditing ? (
         <form>
-            <input
-              name="titulo"
-              type="text"
-              placeholder="Título"
-              value={values.titulo}
-              onChange={onChange}
-            />
+          <input
+            name="titulo"
+            type="text"
+            placeholder="Título"
+            value={values.titulo}
+            onChange={onChange}
+          />
           <textarea
             name="conteudo"
             placeholder="Conteúdo"
@@ -67,7 +67,11 @@ function Card({ card, handleCreate, handleUpdate, handleDelete }: ICardProps) {
             </IconContainer>
           ) : (
             <CardFooter>
-              <IconContainer onClick={() => { setIsEditing(false); }}>
+              <IconContainer
+                onClick={() => {
+                  setIsEditing(false);
+                }}
+              >
                 <FaBan title="Cancelar" />
               </IconContainer>
               <IconContainer>
@@ -80,18 +84,16 @@ function Card({ card, handleCreate, handleUpdate, handleDelete }: ICardProps) {
         <>
           <CardHeader>
             <CardTitle title="Título">{values.titulo}</CardTitle>
-            <IconContainer onClick={() => setIsEditing(true)} >
+            <IconContainer onClick={() => setIsEditing(true)}>
               <FaEdit title="Editar" />
             </IconContainer>
           </CardHeader>
-          <CardBody title="Conteúdo">
-            {values.conteudo}
-          </CardBody>
+          <CardBody title="Conteúdo">{values.conteudo}</CardBody>
           <CardFooter>
             <IconContainer>
               <FaChevronCircleLeft title="Mover p/ Esquerda" />
             </IconContainer>
-            <IconContainer onClick={() => handleDelete(values)} >
+            <IconContainer onClick={() => handleDelete(values)}>
               <FaTrashAlt title="Excluir" />
             </IconContainer>
             <IconContainer>

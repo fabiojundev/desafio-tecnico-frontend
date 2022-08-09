@@ -1,6 +1,11 @@
-type Lista = "ToDo" | "Doing" | "Done" | "";
+export enum Lista {
+  New = "",
+  ToDo = "ToDo",
+  Doing = "Doing",
+  Done = "Done",
+}
 
-export default interface ICard {
+export interface ICard {
   id?: string | null;
   titulo: string;
   conteudo: string;

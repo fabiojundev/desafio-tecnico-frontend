@@ -11,3 +11,8 @@ export interface ICard {
   conteudo: string;
   lista: Lista;
 }
+
+export interface ICardError {
+  field: string;
+  msg: string;
+}

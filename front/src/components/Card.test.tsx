@@ -10,11 +10,25 @@ const card: ICard = {
 
 afterEach(cleanup);
 
-describe("Card", () => {
-  const setCard = jest.fn();
+const handleCreate = jest.fn();
+const handleUpdate = jest.fn();
+const handleDelete = jest.fn();
 
+const customRender = (card: ICard, isNew?: boolean) => {
+  render(
+    <Card
+      card={card}
+      isNew={isNew}
+      handleCreate={handleCreate}
+      handleUpdate={handleUpdate}
+      handleDelete={handleDelete}
+    />,
+  );
+};
+
+describe("Card", () => {
   it("Renders Card", () => {
-    render(<Card card={card} setCard={setCard} />);
+    customRender(card);
     const title = screen.getByPlaceholderText(/Título/i);
     expect(title).toHaveValue(card.titulo);
 
@@ -25,9 +39,9 @@ describe("Card", () => {
     expect(lista).toHaveValue(card.lista);
   });
 
-  it("Renders Card with empty list", () => {
+  it("Renders create Card", () => {
     card.lista = "";
-    render(<Card card={card} setCard={setCard} />);
+    customRender(card, true);
     const title = screen.getByPlaceholderText(/Título/i);
     expect(title).toHaveValue(card.titulo);
 

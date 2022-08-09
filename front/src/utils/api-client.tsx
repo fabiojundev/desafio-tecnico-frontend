@@ -43,7 +43,7 @@ const request = async (path: string, options?: any) => {
   };
 
   try {
-    ret = axios({
+    ret = await axios({
       ...options,
       url,
       headers,

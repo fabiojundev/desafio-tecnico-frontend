@@ -1,11 +1,11 @@
 import styled from "styled-components";
 
-export const ContentInputContainer = styled.div<{height?: string}>`
+export const ContentInputContainer = styled.div<{ height?: string }>`
   display: block;
   width: 100%;
 
   textarea {
-    height: ${props => props.height ? props.height : "5em"};
+    height: ${(props) => (props.height ? props.height : "5em")};
   }
 `;
 

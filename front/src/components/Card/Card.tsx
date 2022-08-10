@@ -10,6 +10,8 @@ import {
 } from "react-icons/fa";
 import DOMPurify from "dompurify";
 import { marked } from "marked";
+import Modal from "react-bootstrap/Modal";
+import highlight from "highlight.js";
 import { ICard, Lista, ICardError } from "../../types/card.type";
 import {
   CardBody,
@@ -21,13 +23,11 @@ import {
   IconContainer,
 } from "./Card.styles";
 
-import Modal from 'react-bootstrap/Modal';
 import "bootstrap/dist/css/bootstrap.min.css";
 import TextInput from "../TextInput/TextInput";
 import { ContentInput } from "../ContentInput";
 
-import highlight from "highlight.js";
-import 'highlight.js/styles/github.css';
+import "highlight.js/styles/github.css";
 
 marked.setOptions({
   highlight(code) {
@@ -122,19 +122,19 @@ function Card({ card, handleCreate, handleUpdate, handleDelete }: ICardProps) {
   };
 
   const handleLeftNav = () => {
-    let hidden = false;
+    let disabled = false;
     if (values.lista === Lista.ToDo) {
-      hidden = true;
+      disabled = true;
     }
-    return hidden;
+    return disabled;
   };
 
   const handleRightNav = () => {
-    let hidden = false;
+    let disabled = false;
     if (values.lista === Lista.Done) {
-      hidden = true;
+      disabled = true;
     }
-    return hidden;
+    return disabled;
   };
 
   const moveRight = () => {
@@ -170,28 +170,26 @@ function Card({ card, handleCreate, handleUpdate, handleDelete }: ICardProps) {
   return (
     <CardContainer>
       {!values.id ? ( // Create Card
-        <>
-          <CardForm>
-            <TextInput
-              name="titulo"
-              type="text"
-              placeholder="Título"
-              value={values.titulo}
-              onChange={onChange}
-              errors={errors}
-            />
-            <ContentInput
-              name="conteudo"
-              placeholder="Conteúdo"
-              onChange={onChange}
-              value={values.conteudo}
-              errors={errors}
-            />
-            <IconContainer onClick={createCard} title="Adicionar">
-              <FaPlusCircle />
-            </IconContainer>
-          </CardForm>
-        </>
+        <CardForm>
+          <TextInput
+            name="titulo"
+            type="text"
+            placeholder="Título"
+            value={values.titulo}
+            onChange={onChange}
+            errors={errors}
+          />
+          <ContentInput
+            name="conteudo"
+            placeholder="Conteúdo"
+            onChange={onChange}
+            value={values.conteudo}
+            errors={errors}
+          />
+          <IconContainer onClick={createCard} title="Adicionar">
+            <FaPlusCircle />
+          </IconContainer>
+        </CardForm>
       ) : isEditing ? ( // Edit Card
         <Modal show={isEditing}>
           <Modal.Header closeButton onClick={handleCancel}>
@@ -226,7 +224,8 @@ function Card({ card, handleCreate, handleUpdate, handleDelete }: ICardProps) {
             </CardForm>
           </Modal.Body>
         </Modal>
-      ) : ( // Show Card
+      ) : (
+        // Show Card
         <>
           <CardHeader>
             <CardTitle title="Título">{values.titulo}</CardTitle>
@@ -242,7 +241,7 @@ function Card({ card, handleCreate, handleUpdate, handleDelete }: ICardProps) {
           />
           <CardFooter>
             <IconContainer
-              hidden={handleLeftNav()}
+              disabled={handleLeftNav()}
               onClick={moveLeft}
               title="Mover p/ Esquerda"
             >
@@ -252,7 +251,7 @@ function Card({ card, handleCreate, handleUpdate, handleDelete }: ICardProps) {
               <FaTrashAlt />
             </IconContainer>
             <IconContainer
-              hidden={handleRightNav()}
+              disabled={handleRightNav()}
               onClick={moveRight}
               title="Mover p/ Direita"
             >

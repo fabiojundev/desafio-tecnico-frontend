@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { ICardError } from "../../types/card.type";
 import { ContentInputContainer, ErrorMsg } from "./ContentInput.styles";
 
-interface ContentInputProps extends React.InputHTMLAttributes<HTMLTextAreaElement> {
+interface ContentInputProps
+  extends React.InputHTMLAttributes<HTMLTextAreaElement> {
   errors: ICardError[];
   height?: string;
 }

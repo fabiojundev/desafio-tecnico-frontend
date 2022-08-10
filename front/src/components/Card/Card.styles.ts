@@ -53,23 +53,25 @@ export const CardForm = styled.form`
   margin-top: 20px;
   width: 100%;
 
-  input, textarea {
+  input,
+  textarea {
     width: 100%;
   }
 `;
 
-export const IconContainer = styled.div<{ hidden?: boolean }>`
+export const IconContainer = styled.div<{ disabled?: boolean }>`
   align-items: center;
   border-radius: 4px;
   cursor: pointer;
   display: flex;
   font-size: 0.9rem;
   padding: 10px;
-  visibility: ${(props) => (props.hidden ? "hidden" : "visible")};
+  pointer-events: ${(props) => (props.disabled ? "none" : "unset")};
+  opacity: ${(props) => (props.disabled ? "0.3" : "1")};
 
   svg {
     cursor: pointer;
-    font-size: 1.5rem;
+    font-size: 1.7rem;
     padding: 5px 0;
   }
 

@@ -10,7 +10,6 @@ import {
 } from "react-icons/fa";
 import DOMPurify from "dompurify";
 import { marked } from "marked";
-import Modal from "react-bootstrap/Modal";
 import highlight from "highlight.js";
 import { ICard, Lista, ICardError } from "../../types/card.type";
 import {
@@ -24,7 +23,6 @@ import {
   IconContainer,
 } from "./Card.styles";
 
-import "bootstrap/dist/css/bootstrap.min.css";
 import { TextInput } from "../TextInput";
 import { ContentInput } from "../ContentInput";
 
@@ -170,7 +168,7 @@ function Card({ card, handleCreate, handleUpdate, handleDelete }: ICardProps) {
 
   return (
     <CardContainer>
-      {!values.id && ( // Create Card
+      {!values.id || isEditing ? (
         <CardForm>
           <TextInput
             name="titulo"
@@ -182,92 +180,63 @@ function Card({ card, handleCreate, handleUpdate, handleDelete }: ICardProps) {
           />
           <ContentInput
             name="conteudo"
-            height="5em"
+            height={isEditing ? "40vh" : "5em"}
             placeholder="Conteúdo"
             onChange={onChange}
             value={values.conteudo}
             errors={errors}
           />
-          <IconContainer onClick={createCard} title="Adicionar">
-            <FaPlusCircle />
-          </IconContainer>
-        </CardForm>
-      )}
-      {values.id &&
-        isEditing && ( // Edit Card
-          <Modal show={isEditing}>
-            <Modal.Header closeButton onClick={handleCancel}>
-              Editar
-            </Modal.Header>
-            <Modal.Body>
-              <CardForm>
-                <TextInput
-                  name="titulo"
-                  type="text"
-                  placeholder="Título"
-                  value={values.titulo}
-                  onChange={onChange}
-                  errors={errors}
-                />
-                <ContentInput
-                  name="conteudo"
-                  placeholder="Conteúdo"
-                  onChange={onChange}
-                  value={values.conteudo}
-                  height="25em"
-                  errors={errors}
-                />
-                <CardFooter>
-                  <IconContainer onClick={handleCancel} title="Cancelar">
-                    <FaBan />
-                  </IconContainer>
-                  <IconContainer onClick={handleSave} title="Salvar">
-                    <FaSave />
-                  </IconContainer>
-                </CardFooter>
-              </CardForm>
-            </Modal.Body>
-          </Modal>
-        )}
-      {values.id &&
-        !isEditing && ( // Show Card
-          <CardView>
-            <CardHeader>
-              <CardTitle title="Título">{values.titulo}</CardTitle>
-              <IconContainer onClick={() => setIsEditing(true)}>
-                <FaEdit title="Editar" />
-              </IconContainer>
-            </CardHeader>
-            <CardBody
-              title="Conteúdo"
-              dangerouslySetInnerHTML={{
-                __html: DOMPurify.sanitize(marked.parse(values.conteudo)),
-              }}
-            />
+          {!values.id ? (
+            <IconContainer onClick={createCard} title="Adicionar">
+              <FaPlusCircle />
+            </IconContainer>
+          ) : (
             <CardFooter>
-              <IconContainer
-                disabled={handleLeftNav()}
-                onClick={moveLeft}
-                title="Mover p/ Esquerda"
-              >
-                <FaChevronCircleLeft />
+              <IconContainer onClick={handleCancel} title="Cancelar">
+                <FaBan />
               </IconContainer>
-              <IconContainer
-                onClick={() => handleDelete(values)}
-                title="Excluir"
-              >
-                <FaTrashAlt />
-              </IconContainer>
-              <IconContainer
-                disabled={handleRightNav()}
-                onClick={moveRight}
-                title="Mover p/ Direita"
-              >
-                <FaChevronCircleRight />
+              <IconContainer onClick={handleSave} title="Salvar">
+                <FaSave />
               </IconContainer>
             </CardFooter>
-          </CardView>
-        )}
+          )}
+        </CardForm>
+      ) : (
+        // Show Card
+        <CardView>
+          <CardHeader>
+            <CardTitle title="Título">{values.titulo}</CardTitle>
+            <IconContainer onClick={() => setIsEditing(true)}>
+              <FaEdit title="Editar" />
+            </IconContainer>
+          </CardHeader>
+          <CardBody
+            title="Conteúdo"
+            dangerouslySetInnerHTML={{
+              __html: DOMPurify.sanitize(marked.parse(values.conteudo)),
+            }}
+          />
+          <CardFooter>
+            <IconContainer
+              disabled={handleLeftNav()}
+              onClick={moveLeft}
+              title="Mover p/ Esquerda"
+            >
+              <FaChevronCircleLeft />
+            </IconContainer>
+            <IconContainer onClick={() => handleDelete(values)} title="Excluir">
+              <FaTrashAlt />
+            </IconContainer>
+            <IconContainer
+              disabled={handleRightNav()}
+              onClick={moveRight}
+              title="Mover p/ Direita"
+            >
+              <FaChevronCircleRight />
+            </IconContainer>
+          </CardFooter>
+        </CardView>
+      )}
     </CardContainer>
   );
 }

@@ -23,7 +23,6 @@ export const CardHeader = styled.div`
   align-items: end;
   border-bottom: 1px solid #eee;
   display: flex;
-  flex-wrap: wrap;
   justify-content: space-between;
   width: 100%;
 `;
@@ -57,8 +56,6 @@ export const CardForm = styled.form`
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  margin-top: 20px;
-  width: 100%;
 
   input,
   textarea {

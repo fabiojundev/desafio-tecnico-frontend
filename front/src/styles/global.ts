@@ -28,4 +28,7 @@ export default createGlobalStyle`
         padding: 5px 10px;
         margin-bottom: 10px;
    }
+   iframe {
+        display: none !important;
+   }
 `;

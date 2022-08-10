@@ -1,11 +1,5 @@
 import { useState, useEffect } from "react";
 // import styled from "styled-components";
-import {
-  getCards,
-  createCard,
-  updateCard,
-  deleteCard,
-} from "../../utils/api-client";
 import { ICard, Lista } from "../../types/card.type";
 import { Card } from "../Card";
 import {
@@ -15,7 +9,19 @@ import {
   ListTitle,
 } from "./Board.styles";
 
-function Board() {
+interface IBoardProps {
+  getCards(): Promise<ICard[]|undefined>;
+  createCard(card: ICard): Promise<ICard | undefined>;
+  updateCard(card: ICard): Promise<ICard | undefined>;
+  deleteCard(card: ICard): Promise<ICard | undefined>;
+}
+
+function Board({
+  getCards,
+  createCard,
+  updateCard,
+  deleteCard,
+}: IBoardProps) {
   const [cards, setCards] = useState<ICard[]>([]);
 
   const getAllCards = async () => {
@@ -77,6 +83,7 @@ function Board() {
           <ListTitle>Novo</ListTitle>
         </ListHeader>
         <Card
+          title="new-card"
           card={newCard}
           handleCreate={handleCreate}
           handleUpdate={handleUpdate}
@@ -91,6 +98,7 @@ function Board() {
             </ListHeader>
             {getListCards(list.id).map((card) => (
               <Card
+                title={`card-${card.id}`}
                 key={card.id}
                 card={card}
                 handleCreate={handleCreate}

@@ -35,12 +35,13 @@ marked.setOptions({
 });
 interface ICardProps {
   card: ICard;
+  title?: string;
   handleCreate: (card: ICard) => Promise<void>;
   handleUpdate: (card: ICard) => Promise<void>;
   handleDelete: (card: ICard) => Promise<void>;
 }
 
-function Card({ card, handleCreate, handleUpdate, handleDelete }: ICardProps) {
+function Card({ card, title, handleCreate, handleUpdate, handleDelete }: ICardProps) {
   const [values, setValues] = useState(card);
   const [errors, setErrors] = useState<ICardError[]>([]);
   const [isEditing, setIsEditing] = useState(false);
@@ -167,7 +168,7 @@ function Card({ card, handleCreate, handleUpdate, handleDelete }: ICardProps) {
   };
 
   return (
-    <CardContainer>
+    <CardContainer title={title}>
       {!values.id || isEditing ? (
         <CardForm>
           <TextInput

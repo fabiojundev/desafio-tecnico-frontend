@@ -9,6 +9,7 @@ import {
   FaTrashAlt,
 } from "react-icons/fa";
 import DOMPurify from "dompurify";
+import { marked } from "marked";
 import { ICard, Lista, ICardError } from "../../types/card.type";
 import {
   CardBody,
@@ -21,8 +22,15 @@ import {
 } from "./Card.styles";
 
 import TextInput from "../TextInput/TextInput";
-import { marked } from "marked";
 
+import highlight from "highlight.js";
+import 'highlight.js/styles/github.css';
+
+marked.setOptions({
+  highlight(code) {
+    return highlight.highlightAuto(code).value;
+  },
+});
 interface ICardProps {
   card: ICard;
   handleCreate: (card: ICard) => Promise<void>;
@@ -186,9 +194,11 @@ function Card({ card, handleCreate, handleUpdate, handleDelete }: ICardProps) {
               <FaEdit title="Editar" />
             </IconContainer>
           </CardHeader>
-          <CardBody 
+          <CardBody
             title="Conteúdo"
-            dangerouslySetInnerHTML={{__html: DOMPurify.sanitize(marked.parse(values.conteudo))}}
+            dangerouslySetInnerHTML={{
+              __html: DOMPurify.sanitize(marked.parse(values.conteudo)),
+            }}
           />
           <CardFooter>
             <IconContainer

@@ -141,7 +141,9 @@ describe("Edit Card", () => {
     });
 
     await waitFor(() => {
-      expect(screen.getByTitle(/Título/i)).toHaveTextContent(changedCard.titulo);
+      expect(screen.getByTitle(/Título/i)).toHaveTextContent(
+        changedCard.titulo,
+      );
       expect(screen.getByTitle(/Conteúdo/i)).toHaveTextContent(
         changedCard.conteudo,
       );

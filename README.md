@@ -1,3 +1,16 @@
+# Observações
+Para executar:  
+```console
+> cd front
+> npm install
+> npm run start
+```
+
+Ficou faltando:
+- testes integrados para todas as funcionalidades
+- docker-compose file
+- tratamento de erros para quando o jwt expirar
+
 # Desafio Técnico - Frontend
 
 O propósito desse desafio é a criação de frontend para um quadro de kanban. Esse quadro possui listas, que contém cards.

@@ -35,13 +35,12 @@ marked.setOptions({
 });
 interface ICardProps {
   card: ICard;
-  title?: string;
   handleCreate: (card: ICard) => Promise<void>;
   handleUpdate: (card: ICard) => Promise<void>;
   handleDelete: (card: ICard) => Promise<void>;
 }
 
-function Card({ card, title, handleCreate, handleUpdate, handleDelete }: ICardProps) {
+function Card({ card, handleCreate, handleUpdate, handleDelete }: ICardProps) {
   const [values, setValues] = useState(card);
   const [errors, setErrors] = useState<ICardError[]>([]);
   const [isEditing, setIsEditing] = useState(false);
@@ -92,11 +91,11 @@ function Card({ card, title, handleCreate, handleUpdate, handleDelete }: ICardPr
           ...validatedValues,
           lista: Lista.ToDo,
         });
-        console.log("createCard", validatedValues);
+
         setValues({ id: "", titulo: "", conteudo: "", lista: Lista.New });
         setErrors([]);
       } catch (error) {
-        console.log(error);
+        // console.log(error);
       }
     }
   };
@@ -112,11 +111,11 @@ function Card({ card, title, handleCreate, handleUpdate, handleDelete }: ICardPr
     if (validatedValues.titulo && validatedValues.conteudo) {
       try {
         await handleUpdate(validatedValues);
-        console.log("handleSave", validatedValues);
+
         setErrors([]);
         setIsEditing(false);
       } catch (error) {
-        console.log(error);
+        // console.log(error);
       }
     }
   };
@@ -168,7 +167,7 @@ function Card({ card, title, handleCreate, handleUpdate, handleDelete }: ICardPr
   };
 
   return (
-    <CardContainer title={title}>
+    <CardContainer>
       {!values.id || isEditing ? (
         <CardForm>
           <TextInput

@@ -10,35 +10,29 @@ import {
 } from "./Board.styles";
 
 interface IBoardProps {
-  getCards(): Promise<ICard[]|undefined>;
+  getCards(): Promise<ICard[] | undefined>;
   createCard(card: ICard): Promise<ICard | undefined>;
   updateCard(card: ICard): Promise<ICard | undefined>;
   deleteCard(card: ICard): Promise<ICard | undefined>;
 }
 
-function Board({
-  getCards,
-  createCard,
-  updateCard,
-  deleteCard,
-}: IBoardProps) {
+function Board({ getCards, createCard, updateCard, deleteCard }: IBoardProps) {
   const [cards, setCards] = useState<ICard[]>([]);
 
-  const getAllCards = async () => {
-    const response = await getCards();
-    console.log("getAllCards", response);
-    if (response) {
-      setCards(response);
-    }
-  };
-
   useEffect(() => {
+    const getAllCards = async () => {
+      const response = await getCards();
+
+      if (response) {
+        setCards(response);
+      }
+    };
     getAllCards();
-  }, []);
+  }, [getCards]);
 
   const handleCreate = async (card: ICard) => {
     const response = await createCard(card);
-    console.log("handleCreate", response);
+
     if (response) {
       setCards([...cards, response]);
     }
@@ -46,7 +40,7 @@ function Board({
 
   const handleUpdate = async (card: ICard) => {
     const response = await updateCard(card);
-    console.log("handleUpdate", card, response);
+
     if (response) {
       setCards(cards.map((c) => (c.id === card.id ? card : c)));
     }
@@ -54,7 +48,7 @@ function Board({
 
   const handleDelete = async (card: ICard) => {
     const response = await deleteCard(card);
-    console.log("handleDelete", card, response);
+
     if (response) {
       setCards(cards.filter((c) => c.id !== card.id));
     }
@@ -83,7 +77,6 @@ function Board({
           <ListTitle>Novo</ListTitle>
         </ListHeader>
         <Card
-          title="new-card"
           card={newCard}
           handleCreate={handleCreate}
           handleUpdate={handleUpdate}
@@ -98,7 +91,6 @@ function Board({
             </ListHeader>
             {getListCards(list.id).map((card) => (
               <Card
-                title={`card-${card.id}`}
                 key={card.id}
                 card={card}
                 handleCreate={handleCreate}

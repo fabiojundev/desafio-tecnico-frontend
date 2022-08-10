@@ -20,11 +20,12 @@ import {
   CardForm,
   CardHeader,
   CardTitle,
+  CardView,
   IconContainer,
 } from "./Card.styles";
 
 import "bootstrap/dist/css/bootstrap.min.css";
-import TextInput from "../TextInput/TextInput";
+import { TextInput } from "../TextInput";
 import { ContentInput } from "../ContentInput";
 
 import "highlight.js/styles/github.css";
@@ -181,6 +182,7 @@ function Card({ card, handleCreate, handleUpdate, handleDelete }: ICardProps) {
           />
           <ContentInput
             name="conteudo"
+            height="5em"
             placeholder="Conteúdo"
             onChange={onChange}
             value={values.conteudo}
@@ -229,7 +231,7 @@ function Card({ card, handleCreate, handleUpdate, handleDelete }: ICardProps) {
         )}
       {values.id &&
         !isEditing && ( // Show Card
-          <>
+          <CardView>
             <CardHeader>
               <CardTitle title="Título">{values.titulo}</CardTitle>
               <IconContainer onClick={() => setIsEditing(true)}>
@@ -264,7 +266,7 @@ function Card({ card, handleCreate, handleUpdate, handleDelete }: ICardProps) {
                 <FaChevronCircleRight />
               </IconContainer>
             </CardFooter>
-          </>
+          </CardView>
         )}
     </CardContainer>
   );

@@ -91,7 +91,9 @@ describe("Create Card", () => {
       userEvent.click(screen.getByTitle(/Editar/i));
 
       expect(screen.getByPlaceholderText(/Título/i)).toHaveValue(card.titulo);
-      expect(screen.getByPlaceholderText(/Conteúdo/i)).toHaveValue(card.conteudo);
+      expect(screen.getByPlaceholderText(/Conteúdo/i)).toHaveValue(
+        card.conteudo,
+      );
       screen.getByTitle(/Cancelar/i);
       screen.getByTitle(/Salvar/i);
     });
@@ -100,7 +102,10 @@ describe("Create Card", () => {
       customRender(card);
 
       userEvent.click(screen.getByTitle(/Editar/i));
-      userEvent.type(screen.getByPlaceholderText(/Título/i), changedCard.titulo);
+      userEvent.type(
+        screen.getByPlaceholderText(/Título/i),
+        changedCard.titulo,
+      );
       userEvent.type(
         screen.getByPlaceholderText(/Conteúdo/i),
         changedCard.conteudo,
@@ -120,7 +125,10 @@ describe("Create Card", () => {
       customRender(card);
 
       userEvent.click(screen.getByTitle(/Editar/i));
-      userEvent.type(screen.getByPlaceholderText(/Título/i), changedCard.titulo);
+      userEvent.type(
+        screen.getByPlaceholderText(/Título/i),
+        changedCard.titulo,
+      );
       userEvent.type(
         screen.getByPlaceholderText(/Conteúdo/i),
         changedCard.conteudo,
@@ -139,5 +147,5 @@ describe("Create Card", () => {
         );
       });
     });
-  })
+  });
 });

@@ -14,6 +14,11 @@ export const CardContainer = styled.div`
   width: 100%;
 `;
 
+export const CardView = styled.div`
+  padding: 10px 0;
+  width: 100%;
+`;
+
 export const CardHeader = styled.div`
   align-items: end;
   border-bottom: 1px solid #eee;
@@ -39,7 +44,9 @@ export const CardFooter = styled.div`
 
 export const CardTitle = styled.h3`
   font-size: 1em;
+  flex-grow: 1;
   margin-bottom: 10px;
+  text-align: center;
 `;
 
 export const CardText = styled.p`
@@ -67,7 +74,7 @@ export const IconContainer = styled.div<{ disabled?: boolean }>`
   font-size: 0.9rem;
   padding: 10px;
   pointer-events: ${(props) => (props.disabled ? "none" : "unset")};
-  opacity: ${(props) => (props.disabled ? "0.3" : "1")};
+  opacity: ${(props) => (props.disabled ? 0.3 : 1)};
 
   svg {
     cursor: pointer;

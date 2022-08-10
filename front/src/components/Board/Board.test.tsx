@@ -10,3 +10,12 @@ const card: ICard = {
 };
 
 afterEach(cleanup);
+
+it("Renders Board", () => {
+  render(<Board />);
+
+  screen.getByText(/Novo/i);
+  screen.getByText(/To Do/i);
+  screen.getByText(/Doing/i);
+  screen.getByText(/Done/i);
+});

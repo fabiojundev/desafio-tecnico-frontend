@@ -21,7 +21,10 @@ import {
   IconContainer,
 } from "./Card.styles";
 
+import Modal from 'react-bootstrap/Modal';
+import "bootstrap/dist/css/bootstrap.min.css";
 import TextInput from "../TextInput/TextInput";
+import { ContentInput } from "../ContentInput";
 
 import highlight from "highlight.js";
 import 'highlight.js/styles/github.css';
@@ -50,7 +53,18 @@ function Card({ card, handleCreate, handleUpdate, handleDelete }: ICardProps) {
     setValues({ ...values, [name]: value });
   };
 
+  const sanitizeFields = () => {
+    const sanitizedValues = {
+      ...values,
+      titulo: DOMPurify.sanitize(values.titulo.trim()),
+      conteudo: DOMPurify.sanitize(values.conteudo.trim()),
+    };
+    setValues(sanitizedValues);
+    return sanitizedValues;
+  };
+
   const validateFields = () => {
+    setErrors([]);
     let updatedErrors = [...errors];
 
     if (!values.titulo) {
@@ -66,22 +80,11 @@ function Card({ card, handleCreate, handleUpdate, handleDelete }: ICardProps) {
       ];
     }
     setErrors(updatedErrors);
-  };
-
-  const sanitizeFields = () => {
-    const sanitizedValues = {
-      ...values,
-      titulo: DOMPurify.sanitize(values.titulo.trim()),
-      conteudo: DOMPurify.sanitize(values.conteudo.trim()),
-    };
-    setValues(sanitizedValues);
-    return sanitizedValues;
+    return sanitizeFields();
   };
 
   const createCard = async () => {
-    setErrors([]);
-    validateFields();
-    const values = sanitizeFields();
+    const values = validateFields();
 
     if (values.titulo && values.conteudo) {
       try {
@@ -91,6 +94,27 @@ function Card({ card, handleCreate, handleUpdate, handleDelete }: ICardProps) {
         });
         console.log("createCard", values);
         setValues({ id: "", titulo: "", conteudo: "", lista: Lista.New });
+        setErrors([]);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+
+  const handleCancel = () => {
+    setValues(card);
+    setIsEditing(false);
+  };
+
+  const handleSave = async () => {
+    const values = validateFields();
+
+    if (values.titulo && values.conteudo) {
+      try {
+        await handleUpdate(values);
+        console.log("handleSave", values);
+        setErrors([]);
+        setIsEditing(false);
       } catch (error) {
         console.log(error);
       }
@@ -143,50 +167,66 @@ function Card({ card, handleCreate, handleUpdate, handleDelete }: ICardProps) {
     handleUpdate(updated);
   };
 
-  const handleCancel = () => {
-    setValues(card);
-    setIsEditing(false);
-  };
-
-  const handleSave = () => {
-    handleUpdate(values);
-    setIsEditing(false);
-  };
-
   return (
     <CardContainer>
-      {!values.id || isEditing ? (
-        <CardForm>
-          <TextInput
-            name="titulo"
-            type="text"
-            placeholder="Título"
-            value={values.titulo}
-            onChange={onChange}
-            errors={errors}
-          />
-          <textarea
-            name="conteudo"
-            placeholder="Conteúdo"
-            onChange={onChange}
-            value={values.conteudo}
-          />
-          {!values.id ? (
+      {!values.id ? ( // Create Card
+        <>
+          <CardForm>
+            <TextInput
+              name="titulo"
+              type="text"
+              placeholder="Título"
+              value={values.titulo}
+              onChange={onChange}
+              errors={errors}
+            />
+            <ContentInput
+              name="conteudo"
+              placeholder="Conteúdo"
+              onChange={onChange}
+              value={values.conteudo}
+              errors={errors}
+            />
             <IconContainer onClick={createCard} title="Adicionar">
               <FaPlusCircle />
             </IconContainer>
-          ) : (
-            <CardFooter>
-              <IconContainer onClick={handleCancel} title="Cancelar">
-                <FaBan />
-              </IconContainer>
-              <IconContainer onClick={handleSave} title="Salvar">
-                <FaSave />
-              </IconContainer>
-            </CardFooter>
-          )}
-        </CardForm>
-      ) : (
+          </CardForm>
+        </>
+      ) : isEditing ? ( // Edit Card
+        <Modal show={isEditing}>
+          <Modal.Header closeButton onClick={handleCancel}>
+            Editar
+          </Modal.Header>
+          <Modal.Body>
+            <CardForm>
+              <TextInput
+                name="titulo"
+                type="text"
+                placeholder="Título"
+                value={values.titulo}
+                onChange={onChange}
+                errors={errors}
+              />
+              <ContentInput
+                name="conteudo"
+                placeholder="Conteúdo"
+                onChange={onChange}
+                value={values.conteudo}
+                height="25em"
+                errors={errors}
+              />
+              <CardFooter>
+                <IconContainer onClick={handleCancel} title="Cancelar">
+                  <FaBan />
+                </IconContainer>
+                <IconContainer onClick={handleSave} title="Salvar">
+                  <FaSave />
+                </IconContainer>
+              </CardFooter>
+            </CardForm>
+          </Modal.Body>
+        </Modal>
+      ) : ( // Show Card
         <>
           <CardHeader>
             <CardTitle title="Título">{values.titulo}</CardTitle>

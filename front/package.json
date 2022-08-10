@@ -11,10 +11,12 @@
     "@types/react": "^18.0.17",
     "@types/react-dom": "^18.0.6",
     "axios": "^0.27.2",
+    "bootstrap": "^5.2.0",
     "dompurify": "^2.3.10",
     "highlight.js": "^11.6.0",
     "marked": "^4.0.18",
     "react": "^18.2.0",
+    "react-bootstrap": "^2.5.0",
     "react-dom": "^18.2.0",
     "react-icons": "^4.4.0",
     "react-scripts": "5.0.1",
@@ -49,8 +51,10 @@
     ]
   },
   "devDependencies": {
+    "@types/bootstrap": "^5.2.1",
     "@types/dompurify": "^2.3.3",
     "@types/marked": "^4.0.3",
+    "@types/react-bootstrap": "^0.32.30",
     "@types/styled-components": "^5.1.25",
     "@typescript-eslint/eslint-plugin": "^5.32.0",
     "@typescript-eslint/parser": "^5.32.0",

@@ -52,6 +52,10 @@ export const CardForm = styled.form`
   justify-content: center;
   margin-top: 20px;
   width: 100%;
+
+  input, textarea {
+    width: 100%;
+  }
 `;
 
 export const IconContainer = styled.div<{ hidden?: boolean }>`

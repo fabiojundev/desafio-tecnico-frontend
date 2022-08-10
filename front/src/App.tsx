@@ -1,5 +1,4 @@
 import React from "react";
-import "./App.css";
 import GlobalStyle from "./styles/global";
 
 import Board from "./components/Board/Board";

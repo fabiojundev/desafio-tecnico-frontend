@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+/* eslint-disable react/jsx-props-no-spreading */
+import React from "react";
 import { ICardError } from "../../types/card.type";
 import { InputContainer, ErrorMsg } from "./TextInput.styles";
 

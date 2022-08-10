@@ -1,11 +1,4 @@
-import {
-  render,
-  screen,
-  cleanup,
-  fireEvent,
-  act,
-  waitFor,
-} from "@testing-library/react";
+import { render, screen, cleanup, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import Card from "./Card";
 import { ICard, Lista } from "../../types/card.type";
@@ -81,14 +74,12 @@ describe("Create Card", () => {
       newCard.conteudo,
     );
 
-    act(() => {
-      userEvent.click(screen.getByTitle(/Adicionar/i));
-    });
+    userEvent.click(screen.getByTitle(/Adicionar/i));
 
     await waitFor(() => {
       expect(screen.getByPlaceholderText(/Título/i)).toBeEmptyDOMElement();
-      expect(screen.getByPlaceholderText(/Conteúdo/i)).toBeEmptyDOMElement();
     });
+    expect(screen.getByPlaceholderText(/Conteúdo/i)).toBeEmptyDOMElement();
   });
 });
 
@@ -96,9 +87,7 @@ describe("Edit Card", () => {
   it("Renders card on edit mode", () => {
     customRender(card);
 
-    act(() => {
-      fireEvent.click(screen.getByTitle(/Editar/i));
-    });
+    userEvent.click(screen.getByTitle(/Editar/i));
 
     expect(screen.getByPlaceholderText(/Título/i)).toHaveValue(card.titulo);
     expect(screen.getByPlaceholderText(/Conteúdo/i)).toHaveValue(card.conteudo);
@@ -116,14 +105,12 @@ describe("Edit Card", () => {
       changedCard.conteudo,
     );
 
-    act(() => {
-      userEvent.click(screen.getByTitle(/Cancelar/i));
-    });
+    userEvent.click(screen.getByTitle(/Cancelar/i));
 
     await waitFor(() => {
       expect(screen.getByTitle(/Título/i)).toHaveTextContent(card.titulo);
-      expect(screen.getByTitle(/Conteúdo/i)).toHaveTextContent(card.conteudo);
     });
+    expect(screen.getByTitle(/Conteúdo/i)).toHaveTextContent(card.conteudo);
   });
 
   it("Edit card and save", async () => {
@@ -136,17 +123,15 @@ describe("Edit Card", () => {
       changedCard.conteudo,
     );
 
-    act(() => {
-      userEvent.click(screen.getByTitle(/Salvar/i));
-    });
+    userEvent.click(screen.getByTitle(/Salvar/i));
 
     await waitFor(() => {
       expect(screen.getByTitle(/Título/i)).toHaveTextContent(
         changedCard.titulo,
       );
-      expect(screen.getByTitle(/Conteúdo/i)).toHaveTextContent(
-        changedCard.conteudo,
-      );
     });
+    expect(screen.getByTitle(/Conteúdo/i)).toHaveTextContent(
+      changedCard.conteudo,
+    );
   });
 });

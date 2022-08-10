@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const ContentInputContainer = styled.div<{ height?: string }>`
+export const ContentInputContainer = styled.div<{ height: string }>`
   display: block;
   width: 100%;
 

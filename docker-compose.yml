@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+    back:
+      build:
+        context: ./BACK
+        dockerfile: Dockerfile
+      ports:
+        - "5000:5000"
+      volumes:
+        # - ./app/node_modules
+        - ./BACK:/app
+      command: ["node", "index.js"]
+
+    front:
+      build:
+        context: ./front
+        dockerfile: Dockerfile
+      ports:
+        - "3000:3000"
+      volumes:
+        # - ./app/node_modules
+        - ./front:/app
+      command: ["serve", "-s", "build"]  
+
+

@@ -1,14 +1,16 @@
 # Observações
-Para executar:  
+Para executar, na raiz do projeto:  
 ```console
-> cd front
-> npm install
-> npm run start
+> docker-compose up -d
+```
+
+O app pode ser acessado através da seguinte URL:
+```
+http://localhost:3000
 ```
 
 Ficou faltando:
-- testes integrados para todas as funcionalidades
-- docker-compose file
+- testes unitários e integrados de algumas funcionalidades
 - tratamento de erros para quando o jwt expirar
 
 # Desafio Técnico - Frontend

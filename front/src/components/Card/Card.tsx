@@ -120,7 +120,7 @@ function Card({ card, handleCreate, handleUpdate, handleDelete }: ICardProps) {
     }
   };
 
-  const handleLeftNav = () => {
+  const disableLeftNav = () => {
     let disabled = false;
     if (values.lista === Lista.ToDo) {
       disabled = true;
@@ -128,7 +128,7 @@ function Card({ card, handleCreate, handleUpdate, handleDelete }: ICardProps) {
     return disabled;
   };
 
-  const handleRightNav = () => {
+  const disableRightNav = () => {
     let disabled = false;
     if (values.lista === Lista.Done) {
       disabled = true;
@@ -218,7 +218,7 @@ function Card({ card, handleCreate, handleUpdate, handleDelete }: ICardProps) {
           />
           <CardFooter>
             <IconContainer
-              disabled={handleLeftNav()}
+              disabled={disableLeftNav()}
               onClick={moveLeft}
               title="Mover p/ Esquerda"
             >
@@ -228,7 +228,7 @@ function Card({ card, handleCreate, handleUpdate, handleDelete }: ICardProps) {
               <FaTrashAlt />
             </IconContainer>
             <IconContainer
-              disabled={handleRightNav()}
+              disabled={disableRightNav()}
               onClick={moveRight}
               title="Mover p/ Direita"
             >

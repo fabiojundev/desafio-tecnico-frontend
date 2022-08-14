@@ -85,7 +85,7 @@ function Board({ getCards, createCard, updateCard, deleteCard }: IBoardProps) {
       </ListContainer>
       <>
         {lists.map((list) => (
-          <ListContainer key={list.id}>
+          <ListContainer key={list.id} title={list.label}>
             <ListHeader>
               <ListTitle>{list.label}</ListTitle>
             </ListHeader>

@@ -17,8 +17,13 @@ const mockCard = (qty: number = 0) => {
   }));
 }
 
-const card = mockCard(1)[0];
-const card1 = mockCard(2)[1];
+const cardsPool = mockCard(3);
+const card = cardsPool[0];
+const card1 = cardsPool[1];
+const title = /Titulo0/i;
+const conteudo = /Conteudo0/i;
+const moveRight = /Mover p\/ direita/i;
+const moveLeft = /Mover p\/ esquerda/i;
 
 const customRender = (cardQty: number = 0) => {
   const cards = mockCard(cardQty);
@@ -76,8 +81,8 @@ describe("Render Board", () => {
       customRender();
     });
 
-    expect(screen.queryByText(/Titulo0/i)).not.toBeInTheDocument();
-    expect(screen.queryByText(/Conteudo0/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(title)).not.toBeInTheDocument();
+    expect(screen.queryByText(conteudo)).not.toBeInTheDocument();
 
     screen.getByTitle(/Adicionar/i);
     userEvent.type(screen.getByPlaceholderText(/Título/i), card.titulo);
@@ -99,15 +104,15 @@ describe("Render Board", () => {
     });
 
     await waitFor(() => {
-      expect(screen.getByText(/Titulo0/i)).toBeInTheDocument();
+      expect(screen.getByText(title)).toBeInTheDocument();
     });
 
     await waitFor(() => {
-      expect(screen.getByText(/Conteudo0/i)).toBeInTheDocument();
+      expect(screen.getByText(conteudo)).toBeInTheDocument();
     });
   });
 
-  it.skip("Move card to the right", async () => {
+  it("Move card to the right and to the left", async () => {
     await act(async () => {
       customRender(1);
     });
@@ -116,26 +121,60 @@ describe("Render Board", () => {
     const doingList = screen.getByTitle(/Doing/i);
     const doneList = screen.getByTitle(/Done/i);
 
-    // todoList.querySelector("")
+    expect(todoList).toHaveTextContent(title);
+    expect(doingList).not.toHaveTextContent(title);
+    expect(doneList).not.toHaveTextContent(title);
 
-    const moveRight = screen.getByTitle(/Mover p\/ Direita/i);
-    expect(moveRight).toBeEnabled();
-    // screen.debug();
-
+    expect(screen.queryByTitle(moveLeft)).toHaveAttribute("disabled");
+    expect(screen.queryByTitle(moveRight)).not.toHaveAttribute("disabled");
     await act(async () => {
-      await userEvent.click(moveRight);
-    });
-
-    await act(async () => {
-      await userEvent.click(moveRight);
+      userEvent.click(screen.getByTitle(moveRight));
     });
 
     await waitFor(() => {
-      expect(moveRight).not.toBeEnabled();
+      expect(doingList).toHaveTextContent(title);
+    });
+    expect(todoList).not.toHaveTextContent(title);
+
+    await act(async () => {
+      userEvent.click(screen.getByTitle(moveRight));
     });
 
-    screen.debug();
+    await waitFor(() => {
+      expect(doneList).toHaveTextContent(title);
+    });
+    expect(doingList).not.toHaveTextContent(title);
 
+    expect(screen.queryByTitle(moveRight)).toHaveAttribute("disabled");
+
+    //Not moved from the right
+    await waitFor(() => {
+      expect(doneList).toHaveTextContent(title);
+    });
+
+    //start moving back to left
+    expect(screen.queryByTitle(moveLeft)).not.toHaveAttribute("disabled");
+
+    await act(async () => {
+      userEvent.click(screen.getByTitle(moveLeft));
+    });
+
+    await waitFor(() => {
+      expect(doingList).toHaveTextContent(title);
+    });
+    expect(doneList).not.toHaveTextContent(title);
+
+    await act(async () => {
+      userEvent.click(screen.getByTitle(moveLeft));
+    });
+
+    await waitFor(() => {
+      expect(todoList).toHaveTextContent(title);
+    });
+    expect(doingList).not.toHaveTextContent(title);
+
+    expect(screen.queryByTitle(moveLeft)).toHaveAttribute("disabled");
+    expect(screen.queryByTitle(moveRight)).not.toHaveAttribute("disabled");
   });
 
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   FaBan,
   FaEdit,
@@ -39,11 +39,15 @@ interface ICardProps {
   handleUpdate: (card: ICard) => Promise<void>;
   handleDelete: (card: ICard) => Promise<void>;
 }
+interface ICardExt extends ICard {
+  leftNavDisabled?: boolean;
+  rightNavDisabled?: boolean;
+}
 
 function Card({ card, handleCreate, handleUpdate, handleDelete }: ICardProps) {
-  const [values, setValues] = useState(card);
+  const [values, setValues] = useState<ICardExt>(card);
   const [errors, setErrors] = useState<ICardError[]>([]);
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditing, setEditing] = useState(false);
 
   const onChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -102,7 +106,7 @@ function Card({ card, handleCreate, handleUpdate, handleDelete }: ICardProps) {
 
   const handleCancel = () => {
     setValues(card);
-    setIsEditing(false);
+    setEditing(false);
   };
 
   const handleSave = async () => {
@@ -113,58 +117,70 @@ function Card({ card, handleCreate, handleUpdate, handleDelete }: ICardProps) {
         await handleUpdate(validatedValues);
 
         setErrors([]);
-        setIsEditing(false);
+        setEditing(false);
       } catch (error) {
         // console.log(error);
       }
     }
   };
 
-  const disableLeftNav = () => {
-    let disabled = false;
-    if (values.lista === Lista.ToDo) {
-      disabled = true;
-    }
-    return disabled;
-  };
+  const updateList = (lista: Lista) => {
+    const updated = {
+      ...values,
+      lista: lista,
+      leftNavDisabled: manageLeftNav(lista),
+      rightNavDisabled: manageRightNav(lista)
+    };
 
-  const disableRightNav = () => {
-    let disabled = false;
-    if (values.lista === Lista.Done) {
-      disabled = true;
-    }
-    return disabled;
+    setValues(updated);
+    handleUpdate(updated);
   };
 
   const moveRight = () => {
-    let updated: ICard = { ...values };
     switch (values.lista) {
       case Lista.ToDo:
-        updated = { ...values, lista: Lista.Doing };
+        updateList(Lista.Doing);
         break;
+
       case Lista.Doing:
       default:
-        updated = { ...values, lista: Lista.Done };
+        updateList(Lista.Done);
         break;
     }
-    setValues(updated);
-    handleUpdate(updated);
   };
 
   const moveLeft = () => {
-    let updated: ICard = { ...values };
     switch (values.lista) {
       case Lista.Done:
-        updated = { ...values, lista: Lista.Doing };
+        updateList(Lista.Doing);
         break;
+
       case Lista.Doing:
       default:
-        updated = { ...values, lista: Lista.ToDo };
+        updateList(Lista.ToDo);
         break;
     }
-    setValues(updated);
-    handleUpdate(updated);
   };
+
+  const manageLeftNav = (lista: Lista): boolean => {
+    let disabled = false;
+    if (lista === Lista.ToDo) {
+      disabled = true;
+    }
+    return disabled;
+  };
+
+  const manageRightNav = (lista: Lista): boolean => {
+    let disabled = false;
+    if (lista === Lista.Done) {
+      disabled = true;
+    }
+    return disabled;
+  };
+
+  useEffect(() => {
+    updateList(values.lista);
+  } , [values.lista]);
 
   return (
     <CardContainer>
@@ -206,7 +222,7 @@ function Card({ card, handleCreate, handleUpdate, handleDelete }: ICardProps) {
         <CardView>
           <CardHeader>
             <CardTitle title="Título">{values.titulo}</CardTitle>
-            <IconContainer onClick={() => setIsEditing(true)}>
+            <IconContainer onClick={() => setEditing(true)}>
               <FaEdit title="Editar" />
             </IconContainer>
           </CardHeader>
@@ -218,7 +234,7 @@ function Card({ card, handleCreate, handleUpdate, handleDelete }: ICardProps) {
           />
           <CardFooter>
             <IconContainer
-              disabled={disableLeftNav()}
+              disabled={values.leftNavDisabled}
               onClick={moveLeft}
               title="Mover p/ Esquerda"
             >
@@ -228,7 +244,7 @@ function Card({ card, handleCreate, handleUpdate, handleDelete }: ICardProps) {
               <FaTrashAlt />
             </IconContainer>
             <IconContainer
-              disabled={disableRightNav()}
+              disabled={values.rightNavDisabled}
               onClick={moveRight}
               title="Mover p/ Direita"
             >

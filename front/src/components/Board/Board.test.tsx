@@ -20,10 +20,19 @@ const mockCard = (qty: number = 0) => {
 const cardsPool = mockCard(3);
 const card = cardsPool[0];
 const card1 = cardsPool[1];
-const title = /Titulo0/i;
+const title = /Título/i;
+const content = /Conteúdo/i;
 const conteudo = /Conteudo0/i;
+const titulo = /Titulo0/i;
+const add = /Adicionar/i;
 const moveRight = /Mover p\/ direita/i;
 const moveLeft = /Mover p\/ esquerda/i;
+const trash = /Excluir/i;
+const todo = /To Do/i;
+const doing = /Doing/i;
+const done = /Done/i;
+const novo = /Novo/i;
+
 
 const customRender = (cardQty: number = 0) => {
   const cards = mockCard(cardQty);
@@ -49,19 +58,20 @@ describe("Render Board", () => {
       customRender();
     });
 
-    screen.getByText(/Novo/i);
-    screen.getByText(/To Do/i);
-    screen.getByText(/Doing/i);
-    screen.getByText(/Done/i);
-    screen.getByTitle(/Adicionar/i);
+    screen.getByText(novo);
+    screen.getByTitle(todo);
+    screen.getByTitle(doing);
+    screen.getByTitle(done);
+    screen.getByTitle(add);
   });
 
   it("Delete existing cards", async () => {
     await act(async () => {
-      customRender(2);
+      customRender(5);
     });
 
-    const trashCards = screen.queryAllByTitle(/Excluir/i);
+    const trashCards = screen.queryAllByTitle(trash);
+    expect(trashCards.length).toBe(5);
 
     for (const trash of trashCards) {
       await act(async () => {
@@ -73,7 +83,7 @@ describe("Render Board", () => {
       });
     }
 
-    expect(screen.queryAllByTitle(/Excluir/i).length).toBe(0);
+    expect(screen.queryAllByTitle(trash).length).toBe(0);
   });
 
   it("Create new card", async () => {
@@ -81,30 +91,30 @@ describe("Render Board", () => {
       customRender();
     });
 
-    expect(screen.queryByText(title)).not.toBeInTheDocument();
+    expect(screen.queryByText(titulo)).not.toBeInTheDocument();
     expect(screen.queryByText(conteudo)).not.toBeInTheDocument();
 
-    screen.getByTitle(/Adicionar/i);
-    userEvent.type(screen.getByPlaceholderText(/Título/i), card.titulo);
-    userEvent.type(screen.getByPlaceholderText(/Conteúdo/i), card.conteudo);
+    screen.getByTitle(add);
+    userEvent.type(screen.getByPlaceholderText(title), card.titulo);
+    userEvent.type(screen.getByPlaceholderText(content), card.conteudo);
 
-    expect(screen.getByPlaceholderText(/Título/i)).toHaveValue(card.titulo);
-    expect(screen.getByPlaceholderText(/Conteúdo/i)).toHaveValue(card.conteudo);
+    expect(screen.getByPlaceholderText(title)).toHaveValue(card.titulo);
+    expect(screen.getByPlaceholderText(content)).toHaveValue(card.conteudo);
 
     await act(async () => {
-      await userEvent.click(screen.getByTitle(/Adicionar/i));
+      await userEvent.click(screen.getByTitle(add));
     });
 
     await waitFor(() => {
-      expect(screen.getByPlaceholderText(/Título/i)).toBeEmptyDOMElement();
+      expect(screen.getByPlaceholderText(title)).toBeEmptyDOMElement();
     });
 
     await waitFor(() => {
-      expect(screen.getByPlaceholderText(/Conteúdo/i)).toBeEmptyDOMElement();
+      expect(screen.getByPlaceholderText(content)).toBeEmptyDOMElement();
     });
 
     await waitFor(() => {
-      expect(screen.getByText(title)).toBeInTheDocument();
+      expect(screen.getByText(titulo)).toBeInTheDocument();
     });
 
     await waitFor(() => {
@@ -117,13 +127,13 @@ describe("Render Board", () => {
       customRender(1);
     });
 
-    const todoList = screen.getByTitle(/To Do/i);
-    const doingList = screen.getByTitle(/Doing/i);
-    const doneList = screen.getByTitle(/Done/i);
+    const todoList = screen.getByTitle(todo);
+    const doingList = screen.getByTitle(doing);
+    const doneList = screen.getByTitle(done);
 
-    expect(todoList).toHaveTextContent(title);
-    expect(doingList).not.toHaveTextContent(title);
-    expect(doneList).not.toHaveTextContent(title);
+    expect(todoList).toHaveTextContent(titulo);
+    expect(doingList).not.toHaveTextContent(titulo);
+    expect(doneList).not.toHaveTextContent(titulo);
 
     expect(screen.queryByTitle(moveLeft)).toHaveAttribute("disabled");
     expect(screen.queryByTitle(moveRight)).not.toHaveAttribute("disabled");
@@ -132,24 +142,24 @@ describe("Render Board", () => {
     });
 
     await waitFor(() => {
-      expect(doingList).toHaveTextContent(title);
+      expect(doingList).toHaveTextContent(titulo);
     });
-    expect(todoList).not.toHaveTextContent(title);
+    expect(todoList).not.toHaveTextContent(titulo);
 
     await act(async () => {
       userEvent.click(screen.getByTitle(moveRight));
     });
 
     await waitFor(() => {
-      expect(doneList).toHaveTextContent(title);
+      expect(doneList).toHaveTextContent(titulo);
     });
-    expect(doingList).not.toHaveTextContent(title);
+    expect(doingList).not.toHaveTextContent(titulo);
 
     expect(screen.queryByTitle(moveRight)).toHaveAttribute("disabled");
 
     //Not moved from the right
     await waitFor(() => {
-      expect(doneList).toHaveTextContent(title);
+      expect(doneList).toHaveTextContent(titulo);
     });
 
     //start moving back to left
@@ -160,22 +170,20 @@ describe("Render Board", () => {
     });
 
     await waitFor(() => {
-      expect(doingList).toHaveTextContent(title);
+      expect(doingList).toHaveTextContent(titulo);
     });
-    expect(doneList).not.toHaveTextContent(title);
+    expect(doneList).not.toHaveTextContent(titulo);
 
     await act(async () => {
       userEvent.click(screen.getByTitle(moveLeft));
     });
 
     await waitFor(() => {
-      expect(todoList).toHaveTextContent(title);
+      expect(todoList).toHaveTextContent(titulo);
     });
-    expect(doingList).not.toHaveTextContent(title);
+    expect(doingList).not.toHaveTextContent(titulo);
 
     expect(screen.queryByTitle(moveLeft)).toHaveAttribute("disabled");
     expect(screen.queryByTitle(moveRight)).not.toHaveAttribute("disabled");
   });
-
-
 });

@@ -29,6 +29,14 @@ afterEach(cleanup);
 const handleCreate = jest.fn();
 const handleUpdate = jest.fn();
 const handleDelete = jest.fn();
+const title = /Título/i;
+const content = /Conteúdo/i;
+const add = /Adicionar/i;
+const edit = /Editar/i;
+const cancel = /Cancelar/i;
+const moveRight = /Mover p\/ Direita/i;
+const moveLeft = /Mover p\/ Esquerda/i;
+const trash = /Excluir/i;
 
 const customRender = (ocard: ICard) => {
   return render(
@@ -45,23 +53,23 @@ describe("Render Cards", () => {
   it("Renders create card", () => {
     customRender(newCard);
 
-    expect(screen.getByPlaceholderText(/Título/i)).toHaveValue(newCard.titulo);
-    expect(screen.getByPlaceholderText(/Conteúdo/i)).toHaveValue(
+    expect(screen.getByPlaceholderText(title)).toHaveValue(newCard.titulo);
+    expect(screen.getByPlaceholderText(content)).toHaveValue(
       newCard.conteudo,
     );
 
-    screen.getByTitle(/Adicionar/i);
+    screen.getByTitle(add);
   });
 
   it("Renders card on read mode", () => {
     customRender(card);
 
-    screen.getByTitle(/Título/i);
-    screen.getByTitle(/Conteúdo/i);
-    screen.getByTitle(/Editar/i);
-    screen.getByTitle(/Mover p\/ Esquerda/i);
-    screen.getByTitle(/Excluir/i);
-    screen.getByTitle(/Mover p\/ Direita/i);
+    screen.getByTitle(title);
+    screen.getByTitle(content);
+    screen.getByTitle(edit);
+    screen.getByTitle(moveLeft);
+    screen.getByTitle(trash);
+    screen.getByTitle(moveRight);
   });
 });
 
@@ -69,18 +77,18 @@ describe("Create Card", () => {
   it("Create card", async () => {
     customRender(newCard);
 
-    expect(screen.getByPlaceholderText(/Título/i)).toHaveValue(newCard.titulo);
-    expect(screen.getByPlaceholderText(/Conteúdo/i)).toHaveValue(
+    expect(screen.getByPlaceholderText(title)).toHaveValue(newCard.titulo);
+    expect(screen.getByPlaceholderText(content)).toHaveValue(
       newCard.conteudo,
     );
 
-    userEvent.click(screen.getByTitle(/Adicionar/i));
+    userEvent.click(screen.getByTitle(add));
 
     await waitFor(() => {
-      expect(screen.getByPlaceholderText(/Título/i)).toBeEmptyDOMElement();
+      expect(screen.getByPlaceholderText(title)).toBeEmptyDOMElement();
     });
     await waitFor(() => {
-      expect(screen.getByPlaceholderText(/Conteúdo/i)).toBeEmptyDOMElement();
+      expect(screen.getByPlaceholderText(content)).toBeEmptyDOMElement();
     });
   });
 
@@ -88,61 +96,71 @@ describe("Create Card", () => {
     it("Renders card on edit mode", () => {
       customRender(card);
 
-      userEvent.click(screen.getByTitle(/Editar/i));
+      userEvent.click(screen.getByTitle(edit));
 
-      expect(screen.getByPlaceholderText(/Título/i)).toHaveValue(card.titulo);
-      expect(screen.getByPlaceholderText(/Conteúdo/i)).toHaveValue(
+      expect(screen.getByPlaceholderText(title)).toHaveValue(card.titulo);
+      expect(screen.getByPlaceholderText(content)).toHaveValue(
         card.conteudo,
       );
-      screen.getByTitle(/Cancelar/i);
+      screen.getByTitle(cancel);
       screen.getByTitle(/Salvar/i);
     });
 
     it("Edit card and cancel", async () => {
       customRender(card);
 
-      userEvent.click(screen.getByTitle(/Editar/i));
+      userEvent.click(screen.getByTitle(edit));
+
+      expect(screen.getByPlaceholderText(title)).toHaveValue(card.titulo);
+      expect(screen.getByPlaceholderText(content)).toHaveValue(card.conteudo);
+      
+      userEvent.clear(screen.getByPlaceholderText(title));
+      userEvent.clear(screen.getByPlaceholderText(content));
+
       userEvent.type(
-        screen.getByPlaceholderText(/Título/i),
+        screen.getByPlaceholderText(title),
         changedCard.titulo,
       );
       userEvent.type(
-        screen.getByPlaceholderText(/Conteúdo/i),
+        screen.getByPlaceholderText(content),
         changedCard.conteudo,
       );
 
-      userEvent.click(screen.getByTitle(/Cancelar/i));
+      expect(screen.getByPlaceholderText(title)).toHaveValue(changedCard.titulo);
+      expect(screen.getByPlaceholderText(content)).toHaveValue(changedCard.conteudo);
+
+      userEvent.click(screen.getByTitle(cancel));
 
       await waitFor(() => {
-        expect(screen.getByTitle(/Título/i)).toHaveTextContent(card.titulo);
+        expect(screen.getByTitle(title)).toHaveTextContent(card.titulo);
       });
       await waitFor(() => {
-        expect(screen.getByTitle(/Conteúdo/i)).toHaveTextContent(card.conteudo);
+        expect(screen.getByTitle(content)).toHaveTextContent(card.conteudo);
       });
     });
 
     it("Edit card and save", async () => {
       customRender(card);
 
-      userEvent.click(screen.getByTitle(/Editar/i));
+      userEvent.click(screen.getByTitle(edit));
       userEvent.type(
-        screen.getByPlaceholderText(/Título/i),
+        screen.getByPlaceholderText(title),
         changedCard.titulo,
       );
       userEvent.type(
-        screen.getByPlaceholderText(/Conteúdo/i),
+        screen.getByPlaceholderText(content),
         changedCard.conteudo,
       );
 
       userEvent.click(screen.getByTitle(/Salvar/i));
 
       await waitFor(() => {
-        expect(screen.getByTitle(/Título/i)).toHaveTextContent(
+        expect(screen.getByTitle(title)).toHaveTextContent(
           changedCard.titulo,
         );
       });
       await waitFor(() => {
-        expect(screen.getByTitle(/Conteúdo/i)).toHaveTextContent(
+        expect(screen.getByTitle(content)).toHaveTextContent(
           changedCard.conteudo,
         );
       });

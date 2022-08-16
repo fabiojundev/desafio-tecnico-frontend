@@ -124,12 +124,28 @@ function Card({ card, handleCreate, handleUpdate, handleDelete }: ICardProps) {
     }
   };
 
+  const manageLeftNav = (lista: Lista): boolean => {
+    let disabled = false;
+    if (lista === Lista.ToDo) {
+      disabled = true;
+    }
+    return disabled;
+  };
+
+  const manageRightNav = (lista: Lista): boolean => {
+    let disabled = false;
+    if (lista === Lista.Done) {
+      disabled = true;
+    }
+    return disabled;
+  };
+
   const updateList = (lista: Lista) => {
     const updated = {
       ...values,
-      lista: lista,
+      lista,
       leftNavDisabled: manageLeftNav(lista),
-      rightNavDisabled: manageRightNav(lista)
+      rightNavDisabled: manageRightNav(lista),
     };
 
     setValues(updated);
@@ -162,25 +178,9 @@ function Card({ card, handleCreate, handleUpdate, handleDelete }: ICardProps) {
     }
   };
 
-  const manageLeftNav = (lista: Lista): boolean => {
-    let disabled = false;
-    if (lista === Lista.ToDo) {
-      disabled = true;
-    }
-    return disabled;
-  };
-
-  const manageRightNav = (lista: Lista): boolean => {
-    let disabled = false;
-    if (lista === Lista.Done) {
-      disabled = true;
-    }
-    return disabled;
-  };
-
   useEffect(() => {
     updateList(values.lista);
-  } , [values.lista]);
+  }, [values.lista]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <CardContainer>

@@ -54,9 +54,7 @@ describe("Render Cards", () => {
     customRender(newCard);
 
     expect(screen.getByPlaceholderText(title)).toHaveValue(newCard.titulo);
-    expect(screen.getByPlaceholderText(content)).toHaveValue(
-      newCard.conteudo,
-    );
+    expect(screen.getByPlaceholderText(content)).toHaveValue(newCard.conteudo);
 
     screen.getByTitle(add);
   });
@@ -78,9 +76,7 @@ describe("Create Card", () => {
     customRender(newCard);
 
     expect(screen.getByPlaceholderText(title)).toHaveValue(newCard.titulo);
-    expect(screen.getByPlaceholderText(content)).toHaveValue(
-      newCard.conteudo,
-    );
+    expect(screen.getByPlaceholderText(content)).toHaveValue(newCard.conteudo);
 
     userEvent.click(screen.getByTitle(add));
 
@@ -99,9 +95,7 @@ describe("Create Card", () => {
       userEvent.click(screen.getByTitle(edit));
 
       expect(screen.getByPlaceholderText(title)).toHaveValue(card.titulo);
-      expect(screen.getByPlaceholderText(content)).toHaveValue(
-        card.conteudo,
-      );
+      expect(screen.getByPlaceholderText(content)).toHaveValue(card.conteudo);
       screen.getByTitle(cancel);
       screen.getByTitle(/Salvar/i);
     });
@@ -113,21 +107,22 @@ describe("Create Card", () => {
 
       expect(screen.getByPlaceholderText(title)).toHaveValue(card.titulo);
       expect(screen.getByPlaceholderText(content)).toHaveValue(card.conteudo);
-      
+
       userEvent.clear(screen.getByPlaceholderText(title));
       userEvent.clear(screen.getByPlaceholderText(content));
 
-      userEvent.type(
-        screen.getByPlaceholderText(title),
-        changedCard.titulo,
-      );
+      userEvent.type(screen.getByPlaceholderText(title), changedCard.titulo);
       userEvent.type(
         screen.getByPlaceholderText(content),
         changedCard.conteudo,
       );
 
-      expect(screen.getByPlaceholderText(title)).toHaveValue(changedCard.titulo);
-      expect(screen.getByPlaceholderText(content)).toHaveValue(changedCard.conteudo);
+      expect(screen.getByPlaceholderText(title)).toHaveValue(
+        changedCard.titulo,
+      );
+      expect(screen.getByPlaceholderText(content)).toHaveValue(
+        changedCard.conteudo,
+      );
 
       userEvent.click(screen.getByTitle(cancel));
 
@@ -143,10 +138,7 @@ describe("Create Card", () => {
       customRender(card);
 
       userEvent.click(screen.getByTitle(edit));
-      userEvent.type(
-        screen.getByPlaceholderText(title),
-        changedCard.titulo,
-      );
+      userEvent.type(screen.getByPlaceholderText(title), changedCard.titulo);
       userEvent.type(
         screen.getByPlaceholderText(content),
         changedCard.conteudo,
@@ -155,9 +147,7 @@ describe("Create Card", () => {
       userEvent.click(screen.getByTitle(/Salvar/i));
 
       await waitFor(() => {
-        expect(screen.getByTitle(title)).toHaveTextContent(
-          changedCard.titulo,
-        );
+        expect(screen.getByTitle(title)).toHaveTextContent(changedCard.titulo);
       });
       await waitFor(() => {
         expect(screen.getByTitle(content)).toHaveTextContent(

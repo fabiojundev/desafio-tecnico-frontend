@@ -1,10 +1,9 @@
 import { render, screen, cleanup, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
-import Board from "./Board";
-import { ICard, Lista } from "../../types/card.type";
 import { act } from "react-dom/test-utils";
-
+import Board from "./Board";
+import { Lista } from "../../types/card.type";
 
 afterEach(cleanup);
 
@@ -15,7 +14,7 @@ const mockCard = (qty: number = 0) => {
     conteudo: `Conteudo${k}`,
     lista: Lista.ToDo,
   }));
-}
+};
 
 const cardsPool = mockCard(3);
 const card = cardsPool[0];
@@ -33,8 +32,7 @@ const doing = /Doing/i;
 const done = /Done/i;
 const novo = /Novo/i;
 
-
-const customRender = (cardQty: number = 0) => {
+const customRender = async (cardQty: number = 0) => {
   const cards = mockCard(cardQty);
 
   const getCards = jest.fn().mockResolvedValue(cards);
@@ -42,21 +40,21 @@ const customRender = (cardQty: number = 0) => {
   const updateCard = jest.fn().mockResolvedValue(card1);
   const deleteCard = jest.fn().mockResolvedValue(card);
 
-  render(
-    <Board
-      getCards={getCards}
-      createCard={createCard}
-      updateCard={updateCard}
-      deleteCard={deleteCard}
-    />,
-  );
+  await act(async () => {
+    render(
+      <Board
+        getCards={getCards}
+        createCard={createCard}
+        updateCard={updateCard}
+        deleteCard={deleteCard}
+      />,
+    );
+  });
 };
 
 describe("Render Board", () => {
   it("Renders Board", async () => {
-    await act(async () => {
-      customRender();
-    });
+    await customRender();
 
     screen.getByText(novo);
     screen.getByTitle(todo);
@@ -66,30 +64,28 @@ describe("Render Board", () => {
   });
 
   it("Delete existing cards", async () => {
-    await act(async () => {
-      customRender(5);
-    });
+    await customRender(5);
 
     const trashCards = screen.queryAllByTitle(trash);
     expect(trashCards.length).toBe(5);
 
-    for (const trash of trashCards) {
+    /* eslint-disable no-restricted-syntax, no-await-in-loop */
+    for (const trashIcon of trashCards) {
       await act(async () => {
-        userEvent.click(trash);
+        userEvent.click(trashIcon);
       });
 
       await waitFor(() => {
-        expect(trash).not.toBeInTheDocument();
+        expect(trashIcon).not.toBeInTheDocument();
       });
     }
+    /* eslint-enable */
 
     expect(screen.queryAllByTitle(trash).length).toBe(0);
   });
 
   it("Create new card", async () => {
-    await act(async () => {
-      customRender();
-    });
+    await customRender();
 
     expect(screen.queryByText(titulo)).not.toBeInTheDocument();
     expect(screen.queryByText(conteudo)).not.toBeInTheDocument();
@@ -123,9 +119,7 @@ describe("Render Board", () => {
   });
 
   it("Move card to the right and to the left", async () => {
-    await act(async () => {
-      customRender(1);
-    });
+    await customRender(1);
 
     const todoList = screen.getByTitle(todo);
     const doingList = screen.getByTitle(doing);
@@ -157,12 +151,12 @@ describe("Render Board", () => {
 
     expect(screen.queryByTitle(moveRight)).toHaveAttribute("disabled");
 
-    //Not moved from the right
+    // Not moved from the right
     await waitFor(() => {
       expect(doneList).toHaveTextContent(titulo);
     });
 
-    //start moving back to left
+    // start moving back to left
     expect(screen.queryByTitle(moveLeft)).not.toHaveAttribute("disabled");
 
     await act(async () => {

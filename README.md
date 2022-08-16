@@ -9,10 +9,6 @@ O app pode ser acessado através da seguinte URL:
 http://localhost:3000
 ```
 
-Ficou faltando:
-- testes unitários e integrados de algumas funcionalidades
-- tratamento de erros para quando o jwt expirar
-
 # Desafio Técnico - Frontend
 
 O propósito desse desafio é a criação de frontend para um quadro de kanban. Esse quadro possui listas, que contém cards.

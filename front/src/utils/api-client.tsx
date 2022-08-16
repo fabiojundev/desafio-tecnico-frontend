@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosResponse, AxiosError } from "axios";
 import DOMPurify from "dompurify";
 import { ICard } from "../types/card.type";
 
@@ -30,8 +30,12 @@ export const logout = () => {
   localStorage.removeItem("auth.token");
 };
 
-const request = async (path: string, options?: any) => {
-  let ret;
+const request = async (
+  path: string,
+  options?: any,
+  retryCount: number = 1,
+): Promise<AxiosResponse | undefined> => {
+  let ret: AxiosResponse | undefined;
   const url = DOMPurify.sanitize(`${API_URL}${path}`);
 
   if (!isLoggedIn()) {
@@ -49,9 +53,28 @@ const request = async (path: string, options?: any) => {
       headers,
     });
   } catch (error) {
-    // reset login jwt token
-    localStorage.setItem("auth.token", "");
+    /* eslint-disable no-console */
+    if (error instanceof AxiosError) {
+      switch (error.response?.status) {
+        case 404:
+          console.log("Bad request");
+          break;
+
+        case 401:
+        default:
+          console.log("Unauthorized");
+          // reset login jwt token
+          localStorage.setItem("auth.token", "");
+
+          // retry again recursively for max 3 times
+          if (retryCount < 3) {
+            return await request(path, options, 1 + retryCount);
+          }
+      }
+    }
+    /* eslint-enable */
   }
+
   return ret;
 };
 
@@ -61,6 +84,7 @@ export const getCards = async (): Promise<ICard[] | undefined> => {
   if (response?.data) {
     ret = response.data;
   }
+
   return ret;
 };
 

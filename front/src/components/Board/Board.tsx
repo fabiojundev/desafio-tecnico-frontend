@@ -13,7 +13,7 @@ interface IBoardProps {
   getCards(): Promise<ICard[] | undefined>;
   createCard(card: ICard): Promise<ICard | undefined>;
   updateCard(card: ICard): Promise<ICard | undefined>;
-  deleteCard(card: ICard): Promise<ICard | undefined>;
+  deleteCard(id: string): Promise<ICard | undefined>;
 }
 
 function Board({ getCards, createCard, updateCard, deleteCard }: IBoardProps) {
@@ -28,7 +28,7 @@ function Board({ getCards, createCard, updateCard, deleteCard }: IBoardProps) {
       }
     };
     getAllCards();
-  }, [getCards]);
+  }, []);
 
   const handleCreate = async (card: ICard) => {
     const response = await createCard(card);
@@ -46,11 +46,11 @@ function Board({ getCards, createCard, updateCard, deleteCard }: IBoardProps) {
     }
   };
 
-  const handleDelete = async (card: ICard) => {
-    const response = await deleteCard(card);
+  const handleDelete = async (id: string) => {
+    const response = await deleteCard(id);
 
     if (response) {
-      setCards(cards.filter((c) => c.id !== card.id));
+      setCards(cards.filter((c) => c.id !== id));
     }
   };
 

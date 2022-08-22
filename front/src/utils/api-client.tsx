@@ -116,13 +116,13 @@ export const updateCard = async (card: ICard): Promise<ICard | undefined> => {
   return ret;
 };
 
-export const deleteCard = async (card: ICard): Promise<ICard | undefined> => {
+export const deleteCard = async (id: string): Promise<ICard | undefined> => {
   let ret;
   const options = {
     method: "DELETE",
   };
 
-  const response = await request(`/cards/${card.id}`, options);
+  const response = await request(`/cards/${id}`, options);
   if (response?.data) {
     ret = response.data;
   }

@@ -5,17 +5,15 @@ import { ContentInputContainer, ErrorMsg } from "./ContentInput.styles";
 
 interface ContentInputProps
   extends React.InputHTMLAttributes<HTMLTextAreaElement> {
-  errors: ICardError[];
+  error: string;
   height: string;
 }
 
-function ContentInput({ errors, name, height, ...props }: ContentInputProps) {
-  const error = errors.find((e: ICardError) => e.field === name);
-
+function ContentInput({ error, name, height, ...props }: ContentInputProps) {
   return (
     <ContentInputContainer height={height}>
       <textarea name={name} {...props} />
-      <ErrorMsg>{error && error?.msg}</ErrorMsg>
+      <ErrorMsg>{error}</ErrorMsg>
     </ContentInputContainer>
   );
 }

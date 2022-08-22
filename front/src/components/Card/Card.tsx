@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import { ICard } from "../../types/card.type";
 import { CardContainer } from "./Card.styles";
 
-import { CardEdit } from "./CardEdit";
-import { CardView } from "./CardView";
+import CardEdit from "./CardEdit";
+import CardView from "./CardView";
 
 interface ICardProps {
   card: ICard;

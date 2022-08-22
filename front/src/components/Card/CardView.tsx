@@ -8,7 +8,8 @@ import {
 import DOMPurify from "dompurify";
 import { marked } from "marked";
 import highlight from "highlight.js";
-import { ICard, Lista } from "../../../types/card.type";
+import { ICard, Lista } from "../../types/card.type";
+
 import {
   CardBody,
   CardContainer,
@@ -17,7 +18,7 @@ import {
   CardTitle,
   CardView as SCardView,
   IconContainer,
-} from "./CardView.styles";
+} from "./Card.styles";
 
 import "highlight.js/styles/github.css";
 

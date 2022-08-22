@@ -1,11 +1,10 @@
 import { useState, useEffect } from "react";
 import DOMPurify from "dompurify";
 import { FaBan, FaPlusCircle, FaSave } from "react-icons/fa";
-import { ICard, Lista } from "../../../types/card.type";
-import { CardFooter, CardForm, IconContainer } from "./CardEdit.styles";
-
-import { TextInput } from "../TextInput";
-import { ContentInput } from "../ContentInput";
+import { ICard, Lista } from "../../types/card.type";
+import { CardFooter, CardForm, IconContainer } from "./Card.styles";
+import { TextInput } from "./TextInput";
+import { ContentInput } from "./ContentInput";
 
 interface CardFormProps {
   card: ICard;

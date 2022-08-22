@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import DOMPurify from "dompurify";
 import { FaBan, FaPlusCircle, FaSave } from "react-icons/fa";
-import { ICard, Lista } from "../../types/card.type";
+import { ICard, Lista } from "../../../types/card.type";
 import { CardFooter, CardForm, IconContainer } from "./CardEdit.styles";
 
 import { TextInput } from "../TextInput";
@@ -85,9 +85,9 @@ function CardEdit({
     setEditing(false);
   };
 
-  useEffect(() => {
-    console.count("CardEdit useEffect");
-  }, []);
+  // useEffect(() => {
+  //   console.count("CardEdit useEffect");
+  // }, []);
 
   return (
     <CardForm>

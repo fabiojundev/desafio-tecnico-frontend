@@ -8,7 +8,7 @@ import {
 import DOMPurify from "dompurify";
 import { marked } from "marked";
 import highlight from "highlight.js";
-import { ICard, Lista } from "../../types/card.type";
+import { ICard, Lista } from "../../../types/card.type";
 import {
   CardBody,
   CardContainer,
@@ -78,7 +78,7 @@ function CardView({
 
   // console.count(`CardView called for: ${card.id}`);
   useEffect(() => {
-    console.count(`CardView useEffect`);
+    // console.count(`CardView useEffect`);
 
     const manageLeftNav = () => {
       let disabled = false;

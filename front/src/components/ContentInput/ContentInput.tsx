@@ -1,6 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React from "react";
-import { ICardError } from "../../types/card.type";
 import { ContentInputContainer, ErrorMsg } from "./ContentInput.styles";
 
 interface ContentInputProps

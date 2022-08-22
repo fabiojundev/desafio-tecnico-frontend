@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import DOMPurify from "dompurify";
 import { FaBan, FaPlusCircle, FaSave } from "react-icons/fa";
 import { ICard, Lista } from "../../types/card.type";
@@ -7,23 +7,21 @@ import { CardFooter, CardForm, IconContainer } from "./CardEdit.styles";
 import { TextInput } from "../TextInput";
 import { ContentInput } from "../ContentInput";
 
-interface CardFormProps extends ICard {
+interface CardFormProps {
+  card: ICard;
   handleCreate: (card: ICard) => Promise<void>;
   handleUpdate: (card: ICard) => Promise<void>;
   setEditing: (edit: boolean) => void;
 }
 
 function CardEdit({
-  id,
-  titulo,
-  conteudo,
-  lista,
+  card,
   handleCreate,
   handleUpdate,
   setEditing,
 }: CardFormProps) {
-  const [title, setTitle] = useState<string>(titulo || "");
-  const [content, setContent] = useState<string>(conteudo || "");
+  const [title, setTitle] = useState<string>(card.titulo || "");
+  const [content, setContent] = useState<string>(card.conteudo || "");
   const [titleError, setTitleError] = useState<string>("");
   const [contentError, setContentError] = useState<string>("");
 
@@ -31,10 +29,10 @@ function CardEdit({
     const vTitle = DOMPurify.sanitize(title.trim());
     const vContent = DOMPurify.sanitize(content.trim());
     let valid: ICard | null = {
-      id,
+      id: card.id,
       titulo: vTitle,
       conteudo: vContent,
-      lista,
+      lista: card.lista,
     };
 
     setTitleError("");
@@ -87,6 +85,10 @@ function CardEdit({
     setEditing(false);
   };
 
+  useEffect(() => {
+    console.count("CardEdit useEffect");
+  }, []);
+
   return (
     <CardForm>
       <TextInput
@@ -109,7 +111,7 @@ function CardEdit({
         }}
         error={contentError}
       />
-      {!id ? (
+      {!card.id ? (
         <IconContainer onClick={createCard} title="Adicionar">
           <FaPlusCircle />
         </IconContainer>

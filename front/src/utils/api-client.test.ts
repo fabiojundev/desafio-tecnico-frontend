@@ -62,7 +62,9 @@ describe("Manage Cards", () => {
 
     cards?.forEach(async (card: ICard) => {
       expect(card.id).not.toEqual("");
-      await deleteCard(card);
+      if (card.id) {
+        await deleteCard(card.id);
+      }
     });
 
     const cards1 = await getCards();

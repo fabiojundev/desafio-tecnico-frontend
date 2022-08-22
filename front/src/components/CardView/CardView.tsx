@@ -27,17 +27,15 @@ marked.setOptions({
   },
 });
 
-interface CardViewProps extends ICard {
+interface CardViewProps {
+  card: ICard;
   handleUpdate: (card: ICard) => Promise<void>;
   handleDelete: (id: string) => Promise<void>;
   setEditing: (edit: boolean) => void;
 }
 
 function CardView({
-  id,
-  titulo,
-  conteudo,
-  lista,
+  card,
   handleUpdate,
   handleDelete,
   setEditing,
@@ -45,41 +43,15 @@ function CardView({
   const [isLeftNavDisabled, setLeftNavDisabled] = useState(false);
   const [isRightNavDisabled, setRighttNavDisabled] = useState(false);
 
-  const manageLeftNav = (lista: Lista): boolean => {
-    let disabled = false;
-    if (lista === Lista.ToDo) {
-      disabled = true;
-    }
-
-    setLeftNavDisabled(disabled);
-    return disabled;
-  };
-
-  const manageRightNav = (lista: Lista): boolean => {
-    let disabled = false;
-    if (lista === Lista.Done) {
-      disabled = true;
-    }
-
-    setRighttNavDisabled(disabled);
-    return disabled;
-  };
-
   const updateList = (lista: Lista) => {
-    const updated = {
-      id,
-      titulo,
-      conteudo,
+    handleUpdate({
+      ...card,
       lista,
-    };
-
-    manageLeftNav(lista);
-    manageRightNav(lista);
-    handleUpdate(updated);
+    });
   };
 
   const moveRight = () => {
-    switch (lista) {
+    switch (card.lista) {
       case Lista.ToDo:
         updateList(Lista.Doing);
         break;
@@ -92,7 +64,7 @@ function CardView({
   };
 
   const moveLeft = () => {
-    switch (lista) {
+    switch (card.lista) {
       case Lista.Done:
         updateList(Lista.Doing);
         break;
@@ -104,16 +76,37 @@ function CardView({
     }
   };
 
+  // console.count(`CardView called for: ${card.id}`);
   useEffect(() => {
-    manageLeftNav(lista);
-    manageRightNav(lista);
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    console.count(`CardView useEffect`);
+
+    const manageLeftNav = () => {
+      let disabled = false;
+      if (card.lista === Lista.ToDo) {
+        disabled = true;
+      }
+
+      setLeftNavDisabled(disabled);
+    };
+
+    const manageRightNav = () => {
+      let disabled = false;
+      if (card.lista === Lista.Done) {
+        disabled = true;
+      }
+
+      setRighttNavDisabled(disabled);
+    };
+
+    manageLeftNav();
+    manageRightNav();
+  }, [card.lista]);
 
   return (
     <CardContainer>
       <SCardView>
         <CardHeader>
-          <CardTitle title="Título">{titulo}</CardTitle>
+          <CardTitle title="Título">{card.titulo}</CardTitle>
           <IconContainer onClick={() => setEditing(true)}>
             <FaEdit title="Editar" />
           </IconContainer>
@@ -121,7 +114,7 @@ function CardView({
         <CardBody
           title="Conteúdo"
           dangerouslySetInnerHTML={{
-            __html: DOMPurify.sanitize(marked.parse(conteudo)),
+            __html: DOMPurify.sanitize(marked.parse(card.conteudo)),
           }}
         />
         <CardFooter>
@@ -132,7 +125,10 @@ function CardView({
           >
             <FaChevronCircleLeft />
           </IconContainer>
-          <IconContainer onClick={() => handleDelete(id)} title="Excluir">
+          <IconContainer
+            onClick={() => card.id && handleDelete(card.id)}
+            title="Excluir"
+          >
             <FaTrashAlt />
           </IconContainer>
           <IconContainer

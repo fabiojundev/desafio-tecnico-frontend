@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-// import styled from "styled-components";
 import { ICard, Lista } from "../../types/card.type";
 import { Card } from "../Card";
 import {
@@ -20,6 +19,7 @@ function Board({ getCards, createCard, updateCard, deleteCard }: IBoardProps) {
   const [cards, setCards] = useState<ICard[]>([]);
 
   useEffect(() => {
+    console.count("Board useEffect");
     const getAllCards = async () => {
       const response = await getCards();
 
@@ -40,7 +40,7 @@ function Board({ getCards, createCard, updateCard, deleteCard }: IBoardProps) {
 
   const handleUpdate = async (card: ICard) => {
     const response = await updateCard(card);
-
+    console.log("handle update", response);
     if (response) {
       setCards(cards.map((c) => (c.id === card.id ? card : c)));
     }
@@ -83,24 +83,22 @@ function Board({ getCards, createCard, updateCard, deleteCard }: IBoardProps) {
           handleDelete={handleDelete}
         />
       </ListContainer>
-      <>
-        {lists.map((list) => (
-          <ListContainer key={list.id} title={list.label}>
-            <ListHeader>
-              <ListTitle>{list.label}</ListTitle>
-            </ListHeader>
-            {getListCards(list.id).map((card) => (
-              <Card
-                key={card.id}
-                card={card}
-                handleCreate={handleCreate}
-                handleUpdate={handleUpdate}
-                handleDelete={handleDelete}
-              />
-            ))}
-          </ListContainer>
-        ))}
-      </>
+      {lists.map((list) => (
+        <ListContainer key={list.id} title={list.label}>
+          <ListHeader>
+            <ListTitle>{list.label}</ListTitle>
+          </ListHeader>
+          {getListCards(list.id).map((card) => (
+            <Card
+              key={card.id}
+              card={card}
+              handleCreate={handleCreate}
+              handleUpdate={handleUpdate}
+              handleDelete={handleDelete}
+            />
+          ))}
+        </ListContainer>
+      ))}
     </BoardContainer>
   );
 }

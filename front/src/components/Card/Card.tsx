@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ICard } from "../../types/card.type";
 import { CardContainer } from "./Card.styles";
 
@@ -15,21 +15,26 @@ interface ICardProps {
 function Card({ card, handleCreate, handleUpdate, handleDelete }: ICardProps) {
   const [isEditing, setEditing] = useState(false);
 
+  useEffect(() => {
+    console.count("CARD useEffect");
+  }, []);
+
   return (
     <CardContainer>
-      {!card.id || isEditing ? (
-        <CardEdit
-          {...card}
-          handleCreate={handleCreate}
+      {card.id && !isEditing ? (
+        // Show Card
+        <CardView
+          card={card}
           handleUpdate={handleUpdate}
+          handleDelete={handleDelete}
           setEditing={setEditing}
         />
       ) : (
-        // Show Card
-        <CardView
-          {...card}
+        // Edit card
+        <CardEdit
+          card={card}
+          handleCreate={handleCreate}
           handleUpdate={handleUpdate}
-          handleDelete={handleDelete}
           setEditing={setEditing}
         />
       )}

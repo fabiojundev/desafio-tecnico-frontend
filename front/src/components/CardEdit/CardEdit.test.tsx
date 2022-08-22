@@ -34,14 +34,11 @@ const content = /Conteúdo/i;
 const add = /Adicionar/i;
 const edit = /Editar/i;
 const cancel = /Cancelar/i;
-const moveRight = /Mover p\/ Direita/i;
-const moveLeft = /Mover p\/ Esquerda/i;
-const trash = /Excluir/i;
 
 const customRender = (ocard: ICard) => {
   return render(
     <CardEdit
-      {...ocard}
+      card={ocard}
       handleCreate={handleCreate}
       handleUpdate={handleUpdate}
       setEditing={setEditing}
@@ -57,17 +54,6 @@ describe("Render Cards", () => {
     expect(screen.getByPlaceholderText(content)).toHaveValue(newCard.conteudo);
 
     screen.getByTitle(add);
-  });
-
-  it("Renders card on read mode", () => {
-    customRender(card);
-
-    screen.getByTitle(title);
-    screen.getByTitle(content);
-    screen.getByTitle(edit);
-    screen.getByTitle(moveLeft);
-    screen.getByTitle(trash);
-    screen.getByTitle(moveRight);
   });
 });
 

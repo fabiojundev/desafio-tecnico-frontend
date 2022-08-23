@@ -77,13 +77,10 @@ function CardView({
     }
   };
 
-  // console.count(`CardView called for: ${card.id}`);
   useEffect(() => {
-    // console.count(`CardView useEffect`);
-
     const manageLeftNav = () => {
       let disabled = false;
-      if (card.lista === Lista.ToDo) {
+      if (Lista.ToDo === card.lista) {
         disabled = true;
       }
 
@@ -92,7 +89,7 @@ function CardView({
 
     const manageRightNav = () => {
       let disabled = false;
-      if (card.lista === Lista.Done) {
+      if (Lista.Done === card.lista) {
         disabled = true;
       }
 
@@ -102,6 +99,12 @@ function CardView({
     manageLeftNav();
     manageRightNav();
   }, [card.lista]);
+
+  const deleteCard = () => {
+    if (card.id) {
+      handleDelete(card.id);
+    }
+  };
 
   return (
     <CardContainer>
@@ -126,10 +129,7 @@ function CardView({
           >
             <FaChevronCircleLeft />
           </IconContainer>
-          <IconContainer
-            onClick={() => card.id && handleDelete(card.id)}
-            title="Excluir"
-          >
+          <IconContainer onClick={deleteCard} title="Excluir">
             <FaTrashAlt />
           </IconContainer>
           <IconContainer

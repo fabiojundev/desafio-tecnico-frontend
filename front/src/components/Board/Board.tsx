@@ -18,8 +18,8 @@ interface IBoardProps {
 function Board({ getCards, createCard, updateCard, deleteCard }: IBoardProps) {
   const [cards, setCards] = useState<ICard[]>([]);
 
+  /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
-    // console.count("Board useEffect");
     const getAllCards = async () => {
       const response = await getCards();
 
@@ -27,8 +27,10 @@ function Board({ getCards, createCard, updateCard, deleteCard }: IBoardProps) {
         setCards(response);
       }
     };
+
     getAllCards();
   }, []);
+  /* eslint-enable */
 
   const handleCreate = async (card: ICard) => {
     const response = await createCard(card);
@@ -40,7 +42,7 @@ function Board({ getCards, createCard, updateCard, deleteCard }: IBoardProps) {
 
   const handleUpdate = async (card: ICard) => {
     const response = await updateCard(card);
-    // console.log("handle update", response);
+
     if (response) {
       setCards(cards.map((c) => (c.id === card.id ? card : c)));
     }

@@ -1,10 +1,4 @@
-import {
-  render,
-  screen,
-  cleanup,
-  waitFor,
-  getByTitle,
-} from "@testing-library/react";
+import { render, screen, cleanup, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import Card from "./Card";
 import { ICard, Lista } from "../../types/card.type";

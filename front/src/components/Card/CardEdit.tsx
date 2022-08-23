@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import DOMPurify from "dompurify";
 import { FaBan, FaPlusCircle, FaSave } from "react-icons/fa";
 import { ICard, Lista } from "../../types/card.type";
@@ -62,7 +62,7 @@ function CardEdit({
         setTitle("");
         setContent("");
       } catch (error) {
-        console.log(error);
+        console.log(error); // eslint-disable-line no-console
       }
     }
   };
@@ -75,7 +75,7 @@ function CardEdit({
         await handleUpdate(vCard);
         setEditing(false);
       } catch (error) {
-        console.log(error);
+        console.log(error); // eslint-disable-line no-console
       }
     }
   };
@@ -83,10 +83,6 @@ function CardEdit({
   const cancelEdit = () => {
     setEditing(false);
   };
-
-  // useEffect(() => {
-  //   console.count("CardEdit useEffect");
-  // }, []);
 
   return (
     <CardForm>

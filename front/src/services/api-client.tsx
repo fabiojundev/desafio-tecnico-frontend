@@ -14,6 +14,8 @@ export const isLoggedIn = (): boolean => {
 };
 
 export const login = async () => {
+  // const usuario = process.env.REACT_APP_API_USER;
+  // const senha = process.env.REACT_APP_API_KEY;
   const usuario = "letscode";
   const senha = "lets@123";
   const response = await axios.post(`${API_URL}/login`, {
@@ -72,6 +74,8 @@ const request = async (
           }
       }
     }
+    console.log("API access error", error);
+    throw error;
     /* eslint-enable */
   }
 
@@ -116,7 +120,7 @@ export const updateCard = async (card: ICard): Promise<ICard | undefined> => {
   return ret;
 };
 
-export const deleteCard = async (id: string): Promise<ICard | undefined> => {
+export const deleteCard = async (id: string): Promise<ICard[] | undefined> => {
   let ret;
   const options = {
     method: "DELETE",

@@ -5,7 +5,7 @@ import {
   createCard,
   updateCard,
   deleteCard,
-} from "./utils/api-client";
+} from "./services/api-client";
 
 import Board from "./components/Board/Board";
 

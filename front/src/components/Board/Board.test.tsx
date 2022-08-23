@@ -1,9 +1,8 @@
 import { render, screen, cleanup, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-
 import { act } from "react-dom/test-utils";
+import { ICard, Lista } from "../../types/card.type";
 import Board from "./Board";
-import { Lista } from "../../types/card.type";
 
 afterEach(cleanup);
 
@@ -18,7 +17,8 @@ const mockCard = (qty: number = 0) => {
 
 const cardsPool = mockCard(3);
 const card = cardsPool[0];
-const card1 = cardsPool[1];
+const card1 = { ...cardsPool[0], lista: Lista.Doing };
+const card2 = { ...cardsPool[0], lista: Lista.Done };
 const title = /Título/i;
 const content = /Conteúdo/i;
 const conteudo = /Conteudo0/i;
@@ -32,21 +32,34 @@ const doing = /Doing/i;
 const done = /Done/i;
 const novo = /Novo/i;
 
-const customRender = async (cardQty: number = 0) => {
-  const cards = mockCard(cardQty);
+interface RenderProps {
+  cardQty: number;
+  getCardsCB?(): Promise<ICard[] | undefined>;
+  createCardCB?(): Promise<ICard | undefined>;
+  updateCardCB?(): Promise<ICard | undefined>;
+  deleteCardCB?(): Promise<ICard[] | undefined>;
+}
 
+const customRender = async ({
+  cardQty,
+  getCardsCB,
+  createCardCB,
+  updateCardCB,
+  deleteCardCB,
+}: RenderProps) => {
+  const cards = mockCard(cardQty);
   const getCards = jest.fn().mockResolvedValue(cards);
   const createCard = jest.fn().mockResolvedValue(card);
   const updateCard = jest.fn().mockResolvedValue(card1);
-  const deleteCard = jest.fn().mockResolvedValue(card);
+  const deleteCard = jest.fn().mockResolvedValue(mockCard(2));
 
   await act(async () => {
     render(
       <Board
-        getCards={getCards}
-        createCard={createCard}
-        updateCard={updateCard}
-        deleteCard={deleteCard}
+        getCards={getCardsCB || getCards}
+        createCard={createCardCB || createCard}
+        updateCard={updateCardCB || updateCard}
+        deleteCard={deleteCardCB || deleteCard}
       />,
     );
   });
@@ -54,7 +67,7 @@ const customRender = async (cardQty: number = 0) => {
 
 describe("Render Board", () => {
   it("Renders Board", async () => {
-    await customRender();
+    await customRender({ cardQty: 0 });
 
     screen.getByText(novo);
     screen.getByTitle(todo);
@@ -64,16 +77,28 @@ describe("Render Board", () => {
   });
 
   it("Delete existing cards", async () => {
-    await customRender(5);
+    const dCards = mockCard(5);
+    const deleteCard = jest
+      .fn()
+      .mockReturnValueOnce(dCards.filter((c, i) => i > 0))
+      .mockReturnValueOnce(dCards.filter((c, i) => i > 1))
+      .mockReturnValueOnce(dCards.filter((c, i) => i > 2))
+      .mockReturnValueOnce(dCards.filter((c, i) => i > 3))
+      .mockReturnValueOnce(dCards.filter((c, i) => i > 4));
+
+    await customRender({ cardQty: 5, deleteCardCB: deleteCard });
 
     const trashCards = screen.queryAllByTitle(trash);
     expect(trashCards.length).toBe(5);
 
+    let count = 0;
     /* eslint-disable no-restricted-syntax, no-await-in-loop */
     for (const trashIcon of trashCards) {
       await act(async () => {
         userEvent.click(trashIcon);
       });
+      count += 1;
+      expect(deleteCard.mock.calls.length).toBe(count);
 
       await waitFor(() => {
         expect(trashIcon).not.toBeInTheDocument();
@@ -85,7 +110,7 @@ describe("Render Board", () => {
   });
 
   it("Create new card", async () => {
-    await customRender();
+    await customRender({ cardQty: 0 });
 
     expect(screen.queryByText(titulo)).not.toBeInTheDocument();
     expect(screen.queryByText(conteudo)).not.toBeInTheDocument();
@@ -119,7 +144,14 @@ describe("Render Board", () => {
   });
 
   it("Move card to the right and to the left", async () => {
-    await customRender(1);
+    const updateCard = jest
+      .fn()
+      .mockReturnValueOnce(card1) // doing
+      .mockReturnValueOnce(card2) // done
+      .mockReturnValueOnce(card1) // doing
+      .mockReturnValueOnce(card); // to do
+
+    await customRender({ cardQty: 1, updateCardCB: updateCard });
 
     const todoList = screen.getByTitle(todo);
     const doingList = screen.getByTitle(doing);
@@ -134,8 +166,10 @@ describe("Render Board", () => {
     await act(async () => {
       userEvent.click(screen.getByTitle(moveRight));
     });
+    expect(updateCard.mock.calls.length).toBe(1);
 
     await waitFor(() => {
+      // doing
       expect(doingList).toHaveTextContent(titulo);
     });
     expect(todoList).not.toHaveTextContent(titulo);
@@ -143,15 +177,17 @@ describe("Render Board", () => {
     await act(async () => {
       userEvent.click(screen.getByTitle(moveRight));
     });
+    expect(updateCard.mock.calls.length).toBe(2);
 
     await waitFor(() => {
+      // done
       expect(doneList).toHaveTextContent(titulo);
     });
     expect(doingList).not.toHaveTextContent(titulo);
 
     expect(screen.queryByTitle(moveRight)).toHaveAttribute("disabled");
 
-    // Not moved from the right
+    // Not moved from the right, still done
     await waitFor(() => {
       expect(doneList).toHaveTextContent(titulo);
     });
@@ -160,8 +196,10 @@ describe("Render Board", () => {
     expect(screen.queryByTitle(moveLeft)).not.toHaveAttribute("disabled");
 
     await act(async () => {
+      // doing
       userEvent.click(screen.getByTitle(moveLeft));
     });
+    expect(updateCard.mock.calls.length).toBe(3);
 
     await waitFor(() => {
       expect(doingList).toHaveTextContent(titulo);
@@ -171,6 +209,7 @@ describe("Render Board", () => {
     await act(async () => {
       userEvent.click(screen.getByTitle(moveLeft));
     });
+    expect(updateCard.mock.calls.length).toBe(4);
 
     await waitFor(() => {
       expect(todoList).toHaveTextContent(titulo);

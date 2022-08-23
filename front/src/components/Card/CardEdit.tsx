@@ -6,7 +6,7 @@ import { CardFooter, CardForm, IconContainer } from "./Card.styles";
 import { TextInput } from "./TextInput";
 import { ContentInput } from "./ContentInput";
 
-interface CardFormProps {
+interface CardEditProps {
   card: ICard;
   handleCreate: (card: ICard) => Promise<void>;
   handleUpdate: (card: ICard) => Promise<void>;
@@ -18,7 +18,7 @@ function CardEdit({
   handleCreate,
   handleUpdate,
   setEditing,
-}: CardFormProps) {
+}: CardEditProps) {
   const [title, setTitle] = useState<string>(card.titulo || "");
   const [content, setContent] = useState<string>(card.conteudo || "");
   const [titleError, setTitleError] = useState<string>("");

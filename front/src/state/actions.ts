@@ -43,7 +43,7 @@ export const retrieveCardsAction = (cards: ICard[]): IRetrieveCardsAction => ({
   payload: cards,
 });
 
-export const udpateCardAction = (card: ICard): IUpdateCardAction => ({
+export const updateCardAction = (card: ICard): IUpdateCardAction => ({
   type: BoardActionTypes.UpdateCard,
   payload: card,
 });

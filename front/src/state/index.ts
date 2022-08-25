@@ -10,6 +10,6 @@ export {
   BoardActionTypes,
   createCardAction,
   retrieveCardsAction,
-  udpateCardAction,
+  updateCardAction,
   deleteCardAction,
 } from "./actions";

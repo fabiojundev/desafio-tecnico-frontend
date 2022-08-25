@@ -22,7 +22,7 @@ export const boardReducer = (
     case BoardActionTypes.UpdateCard:
       return {
         ...state,
-        cards: [...state.cards, payload],
+        cards: state.cards.map((c) => (c.id === payload.id ? payload : c)),
       };
 
     case BoardActionTypes.DeleteCard:

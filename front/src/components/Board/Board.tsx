@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useContext } from "react";
+import { BoardContext } from "../../state";
 import { ICard, Lista } from "../../types/card.type";
 import { Card } from "../Card";
 import {
@@ -8,53 +9,9 @@ import {
   ListTitle,
 } from "./Board.styles";
 
-interface IBoardProps {
-  getCards(): Promise<ICard[] | undefined>;
-  createCard(card: ICard): Promise<ICard | undefined>;
-  updateCard(card: ICard): Promise<ICard | undefined>;
-  deleteCard(id: string): Promise<ICard[] | undefined>;
-}
-
-function Board({ getCards, createCard, updateCard, deleteCard }: IBoardProps) {
-  const [cards, setCards] = useState<ICard[]>([]);
-
-  /* eslint-disable react-hooks/exhaustive-deps */
-  useEffect(() => {
-    const getAllCards = async () => {
-      const response = await getCards();
-
-      if (response) {
-        setCards(response);
-      }
-    };
-
-    getAllCards();
-  }, []);
-  /* eslint-enable */
-
-  const handleCreate = async (card: ICard) => {
-    const response = await createCard(card);
-
-    if (response) {
-      setCards([...cards, response]);
-    }
-  };
-
-  const handleUpdate = async (card: ICard) => {
-    const response = await updateCard(card);
-
-    if (response) {
-      setCards(cards.map((c) => (c.id === card.id ? response : c)));
-    }
-  };
-
-  const handleDelete = async (id: string) => {
-    const response = await deleteCard(id);
-
-    if (response) {
-      setCards(response);
-    }
-  };
+function Board() {
+  const { state } = useContext(BoardContext);
+  const { cards } = state;
 
   const getListCards = (list: string) => {
     return cards?.filter((c) => c.lista === list);
@@ -78,12 +35,7 @@ function Board({ getCards, createCard, updateCard, deleteCard }: IBoardProps) {
         <ListHeader>
           <ListTitle>Novo</ListTitle>
         </ListHeader>
-        <Card
-          card={newCard}
-          handleCreate={handleCreate}
-          handleUpdate={handleUpdate}
-          handleDelete={handleDelete}
-        />
+        <Card card={newCard} />
       </ListContainer>
       {lists.map((list) => (
         <ListContainer key={list.id} title={list.label}>
@@ -91,13 +43,7 @@ function Board({ getCards, createCard, updateCard, deleteCard }: IBoardProps) {
             <ListTitle>{list.label}</ListTitle>
           </ListHeader>
           {getListCards(list.id).map((card) => (
-            <Card
-              key={card.id}
-              card={card}
-              handleCreate={handleCreate}
-              handleUpdate={handleUpdate}
-              handleDelete={handleDelete}
-            />
+            <Card key={card.id} card={card} />
           ))}
         </ListContainer>
       ))}

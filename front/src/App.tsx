@@ -1,11 +1,6 @@
 import { useEffect, useReducer } from "react";
 import GlobalStyle from "./styles/global";
-import {
-  getCards,
-  createCard,
-  updateCard,
-  deleteCard,
-} from "./services/api-client";
+import { getCards } from "./services/api-client";
 
 import { Board } from "./components/Board";
 import {
@@ -14,7 +9,6 @@ import {
   boardReducer,
   BoardContext,
   BoardState,
-  BoardActions,
 } from "./state";
 
 function App() {
@@ -29,7 +23,6 @@ function App() {
       const response = await getCards();
 
       if (response) {
-        console.log(response);
         dispatch(retrieveCardsAction(response));
       }
     };
@@ -41,12 +34,7 @@ function App() {
     <div className="App">
       <GlobalStyle />
       <BoardContext.Provider value={{ state, dispatch }}>
-        <Board
-          getCards={getCards}
-          createCard={createCard}
-          updateCard={updateCard}
-          deleteCard={deleteCard}
-        />
+        <Board />
       </BoardContext.Provider>
     </div>
   );

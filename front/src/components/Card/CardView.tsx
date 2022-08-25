@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import {
   FaEdit,
   FaChevronCircleLeft,
@@ -9,6 +9,8 @@ import DOMPurify from "dompurify";
 import { marked } from "marked";
 import highlight from "highlight.js";
 import { ICard, Lista } from "../../types/card.type";
+
+import {BoardContext} from "../../state";
 
 import {
   CardBody,
@@ -30,22 +32,20 @@ marked.setOptions({
 
 interface CardViewProps {
   card: ICard;
-  handleUpdate: (card: ICard) => Promise<void>;
-  handleDelete: (id: string) => Promise<void>;
   setEditing: (edit: boolean) => void;
 }
 
 function CardView({
   card,
-  handleUpdate,
-  handleDelete,
   setEditing,
 }: CardViewProps) {
+  const { updateCardApi, deleteCardApi } = useContext(BoardContext);
+
   const [isLeftNavDisabled, setLeftNavDisabled] = useState(false);
   const [isRightNavDisabled, setRighttNavDisabled] = useState(false);
 
   const updateList = (lista: Lista) => {
-    handleUpdate({
+    updateCardApi({
       ...card,
       lista,
     });
@@ -102,7 +102,7 @@ function CardView({
 
   const deleteCard = () => {
     if (card.id) {
-      handleDelete(card.id);
+      deleteCardApi(card.id);
     }
   };
 

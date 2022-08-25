@@ -1,28 +1,26 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import DOMPurify from "dompurify";
 import { FaBan, FaPlusCircle, FaSave } from "react-icons/fa";
 import { ICard, Lista } from "../../types/card.type";
 import { CardFooter, CardForm, IconContainer } from "./Card.styles";
 import { TextInput } from "./TextInput";
 import { ContentInput } from "./ContentInput";
-
+import {BoardContext} from "../../state";
 interface CardEditProps {
   card: ICard;
-  handleCreate: (card: ICard) => Promise<void>;
-  handleUpdate: (card: ICard) => Promise<void>;
   setEditing: (edit: boolean) => void;
 }
 
 function CardEdit({
   card,
-  handleCreate,
-  handleUpdate,
   setEditing,
 }: CardEditProps) {
   const [title, setTitle] = useState<string>(card.titulo || "");
   const [content, setContent] = useState<string>(card.conteudo || "");
   const [titleError, setTitleError] = useState<string>("");
   const [contentError, setContentError] = useState<string>("");
+
+  const { updateCardApi, createCardApi } = useContext(BoardContext);
 
   const validateFields = (): ICard | null => {
     const vTitle = DOMPurify.sanitize(title.trim());
@@ -54,7 +52,7 @@ function CardEdit({
 
     if (vCard) {
       try {
-        await handleCreate({
+        await createCardApi({
           ...vCard,
           lista: Lista.ToDo,
         });
@@ -72,7 +70,7 @@ function CardEdit({
 
     if (vCard) {
       try {
-        await handleUpdate(vCard);
+        await updateCardApi(vCard);
         setEditing(false);
       } catch (error) {
         console.log(error); // eslint-disable-line no-console

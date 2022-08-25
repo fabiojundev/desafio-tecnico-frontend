@@ -7,7 +7,7 @@ interface ITopBarProps {
 
 function TopBar({ loading, msg }: ITopBarProps) {
   const reloadPage = () => {
-    window.location.reload(false);
+    window.location.reload();
   };
   return (
     <TopBarContainer>

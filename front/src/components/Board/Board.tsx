@@ -1,13 +1,7 @@
-import React, { useEffect, useReducer } from "react";
+import React, { useEffect, useContext } from "react";
 import {
-  initialState,
   newCard,
-  retrieveCardsAction,
-  startRequestAction,
-  setErrorAction,
-  boardReducer,
   BoardContext,
-  // BoardState,
 } from "../../state";
 
 import { TopBar } from "../TopBar";
@@ -20,35 +14,14 @@ import {
   ListTitle,
 } from "./Board.styles";
 
-interface IBoardProps {
-  createCard(card: ICard): Promise<ICard | undefined>;
-  getCards(): Promise<ICard[] | undefined>;
-  updateCard(card: ICard): Promise<ICard | undefined>;
-  deleteCard(id: string): Promise<ICard[] | undefined>;
-}
-function Board({ createCard, getCards, updateCard, deleteCard }: IBoardProps) {
-  const [state, dispatch] = useReducer(boardReducer, initialState);
+function Board() {
 
+  const { state, retrieveCardsApi } = useContext(BoardContext);
   const { cards, loading, error } = state;
 
   /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
-    dispatch(startRequestAction());
-    const getAllCards = async () => {
-      try {
-        const response = await getCards();
-
-        if (response) {
-          dispatch(retrieveCardsAction(response));
-        }
-      } catch (error) {
-        if (typeof error?.message === "string") {
-          dispatch(setErrorAction(error.message));
-        }
-      }
-    };
-
-    getAllCards();
+    retrieveCardsApi();
   }, []);
   /* eslint-enable */
 
@@ -63,38 +36,30 @@ function Board({ createCard, getCards, updateCard, deleteCard }: IBoardProps) {
   ];
 
   return (
-    <BoardContext.Provider value={{ state, dispatch }}>
-      <BoardContainer>
-        <TopBar loading={loading} msg={error} />
-        <ListContainer>
+    <BoardContainer>
+      <TopBar loading={loading} msg={error} />
+      <ListContainer>
+        <ListHeader>
+          <ListTitle>Novo</ListTitle>
+        </ListHeader>
+        <Card
+          card={newCard}
+        />
+      </ListContainer>
+      {lists.map((list) => (
+        <ListContainer key={list.id} title={list.label}>
           <ListHeader>
-            <ListTitle>Novo</ListTitle>
+            <ListTitle>{list.label}</ListTitle>
           </ListHeader>
-          <Card
-            card={newCard}
-            createCard={createCard}
-            updateCard={updateCard}
-            deleteCard={deleteCard}
-          />
+          {getListCards(list.id).map((card: ICard) => (
+            <Card
+              key={card.id}
+              card={card}
+            />
+          ))}
         </ListContainer>
-        {lists.map((list) => (
-          <ListContainer key={list.id} title={list.label}>
-            <ListHeader>
-              <ListTitle>{list.label}</ListTitle>
-            </ListHeader>
-            {getListCards(list.id).map((card: ICard) => (
-              <Card
-                key={card.id}
-                card={card}
-                createCard={createCard}
-                updateCard={updateCard}
-                deleteCard={deleteCard}
-              />
-            ))}
-          </ListContainer>
-        ))}
-      </BoardContainer>
-    </BoardContext.Provider>
+      ))}
+    </BoardContainer>
   );
 }
 

@@ -1,9 +1,9 @@
 import styled from "styled-components";
 
 export const TopBarContainer = styled.div`
-  align-content: baseline;
-  align-items: baseline;
-  background-color: #eee;
+  align-content: center;
+  align-items: center;
+  background-color: white;
   color: red;
   display: flex;
   flex-wrap: wrap;
@@ -14,4 +14,9 @@ export const TopBarContainer = styled.div`
   margin: 0;
   height: 2em;
   padding: 8px 20px;
+`;
+
+export const ReloadButton = styled.button`
+  margin: 0 10px;
+  padding: 5px 10px;
 `;

@@ -1,5 +1,6 @@
 import {
   TopBarContainer,
+  ReloadButton,
 } from "./TopBar.styles";
 
 interface ITopBarProps {
@@ -9,10 +10,18 @@ interface ITopBarProps {
 
 function TopBar({ loading, msg }: ITopBarProps) {
 
+  const reloadPage = () => {
+    window.location.reload(false);
+  };
   return (
     <TopBarContainer>
       {loading && <div>Carregando...</div>}
-      {msg && <div>{msg}</div>}
+      {msg && 
+        <>
+          {msg}
+          <ReloadButton onClick={reloadPage}> Recarregar Página</ReloadButton>
+        </>
+      }
     </TopBarContainer>
   );
 }

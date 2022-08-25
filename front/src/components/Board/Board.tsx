@@ -1,8 +1,5 @@
 import React, { useEffect, useContext } from "react";
-import {
-  newCard,
-  BoardContext,
-} from "../../state";
+import { newCard, BoardContext } from "../../state";
 
 import { TopBar } from "../TopBar";
 import { ICard, Lista } from "../../types/card.type";
@@ -15,7 +12,6 @@ import {
 } from "./Board.styles";
 
 function Board() {
-
   const { state, retrieveCardsApi } = useContext(BoardContext);
   const { cards, loading, error } = state;
 
@@ -42,9 +38,7 @@ function Board() {
         <ListHeader>
           <ListTitle>Novo</ListTitle>
         </ListHeader>
-        <Card
-          card={newCard}
-        />
+        <Card card={newCard} />
       </ListContainer>
       {lists.map((list) => (
         <ListContainer key={list.id} title={list.label}>
@@ -52,10 +46,7 @@ function Board() {
             <ListTitle>{list.label}</ListTitle>
           </ListHeader>
           {getListCards(list.id).map((card: ICard) => (
-            <Card
-              key={card.id}
-              card={card}
-            />
+            <Card key={card.id} card={card} />
           ))}
         </ListContainer>
       ))}

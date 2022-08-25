@@ -64,7 +64,7 @@ const request = async (
 
         case 401:
         default:
-          console.log("Unauthorized");
+          console.log("Unauthorized retryCount:", retryCount);
           // reset login jwt token
           localStorage.setItem("auth.token", "");
 

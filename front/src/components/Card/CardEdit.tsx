@@ -5,16 +5,14 @@ import { ICard, Lista } from "../../types/card.type";
 import { CardFooter, CardForm, IconContainer } from "./Card.styles";
 import { TextInput } from "./TextInput";
 import { ContentInput } from "./ContentInput";
-import {BoardContext} from "../../state";
+import { BoardContext } from "../../state";
+
 interface CardEditProps {
   card: ICard;
   setEditing: (edit: boolean) => void;
 }
 
-function CardEdit({
-  card,
-  setEditing,
-}: CardEditProps) {
+function CardEdit({ card, setEditing }: CardEditProps) {
   const [title, setTitle] = useState<string>(card.titulo || "");
   const [content, setContent] = useState<string>(card.conteudo || "");
   const [titleError, setTitleError] = useState<string>("");

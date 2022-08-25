@@ -1,15 +1,6 @@
-import { useState, useContext } from "react";
+import { useState } from "react";
 import { ICard } from "../../types/card.type";
 import { CardContainer } from "./Card.styles";
-
-import {
-  BoardContext,
-  updateCardAction,
-  startRequestAction,
-  setErrorAction,
-  deleteCardAction,
-  createCardAction,
-} from "../../state";
 
 import CardEdit from "./CardEdit";
 import CardView from "./CardView";
@@ -25,16 +16,10 @@ function Card({ card }: ICardProps) {
     <CardContainer>
       {card.id && !isEditing ? (
         // Show Card
-        <CardView
-          card={card}
-          setEditing={setEditing}
-        />
+        <CardView card={card} setEditing={setEditing} />
       ) : (
         // Edit card
-        <CardEdit
-          card={card}
-          setEditing={setEditing}
-        />
+        <CardEdit card={card} setEditing={setEditing} />
       )}
     </CardContainer>
   );

@@ -10,7 +10,7 @@ import { marked } from "marked";
 import highlight from "highlight.js";
 import { ICard, Lista } from "../../types/card.type";
 
-import {BoardContext} from "../../state";
+import { BoardContext } from "../../state";
 
 import {
   CardBody,
@@ -35,10 +35,7 @@ interface CardViewProps {
   setEditing: (edit: boolean) => void;
 }
 
-function CardView({
-  card,
-  setEditing,
-}: CardViewProps) {
+function CardView({ card, setEditing }: CardViewProps) {
   const { updateCardApi, deleteCardApi } = useContext(BoardContext);
 
   const [isLeftNavDisabled, setLeftNavDisabled] = useState(false);

@@ -12,4 +12,6 @@ export {
   retrieveCardsAction,
   updateCardAction,
   deleteCardAction,
+  startRequestAction,
+  setErrorAction,
 } from "./actions";

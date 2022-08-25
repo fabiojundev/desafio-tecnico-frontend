@@ -75,7 +75,7 @@ const request = async (
       }
     }
     console.log("API access error", error);
-    throw error;
+    throw(error);
     /* eslint-enable */
   }
 
@@ -113,7 +113,9 @@ export const updateCard = async (card: ICard): Promise<ICard | undefined> => {
     data: card,
   };
 
+  console.log("bf");
   const response = await request(`/cards/${card.id}`, options);
+  console.log("af", response);
   if (response?.data) {
     ret = response.data;
   }

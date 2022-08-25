@@ -5,6 +5,8 @@ import { CardContainer } from "./Card.styles";
 import {
   BoardContext,
   updateCardAction,
+  startRequestAction,
+  setErrorAction,
   deleteCardAction,
   createCardAction,
 } from "../../state";
@@ -24,27 +26,52 @@ function Card({ card, createCard, updateCard, deleteCard }: ICardProps) {
   const [isEditing, setEditing] = useState(false);
 
   const handleCreate = async (aCard: ICard) => {
-    const response = await createCard(aCard);
+    dispatch(startRequestAction());
 
-    if (response) {
-      dispatch(createCardAction(response));
+    try {
+      const response = await createCard(aCard);
+
+      if (response) {
+        dispatch(createCardAction(response));
+      }
+    } catch (error) {
+      if (typeof error?.message === 'string') {
+        dispatch(setErrorAction(error.message));
+      }
     }
   };
 
   const handleUpdate = async (aCard: ICard) => {
-    const response = await updateCard(aCard);
+    dispatch(startRequestAction());
 
-    if (response) {
-      dispatch(updateCardAction(response));
+    try {
+      const response = await updateCard(aCard);
+
+      if (response) {
+        dispatch(updateCardAction(response));
+      }
+    } catch (error) {
+      if (typeof error?.message === 'string') {
+        dispatch(setErrorAction(error.message));
+      }
     }
   };
 
   const handleDelete = async (id: string) => {
-    const response = await deleteCard(id);
+    dispatch(startRequestAction());
 
-    if (response) {
-      dispatch(deleteCardAction(id));
+    try {
+      const response = await deleteCard(id);
+
+      if (response) {
+        dispatch(deleteCardAction(id));
+      }
+    } catch (error) {
+      if (typeof error?.message === 'string') {
+        dispatch(setErrorAction(error.message));
+      }
     }
+
   };
 
   return (

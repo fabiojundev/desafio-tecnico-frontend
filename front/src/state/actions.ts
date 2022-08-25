@@ -5,6 +5,8 @@ export enum BoardActionTypes {
   UpdateCard = "UpdateCard",
   RetrieveCards = "RetrieveCards",
   DeleteCard = "DeleteCard",
+  StartRequest = "StartRequest",
+  SetError = "SetError",
 }
 
 export interface ICreateCardAction {
@@ -26,12 +28,23 @@ export interface IDeleteCardAction {
   type: BoardActionTypes.DeleteCard;
   payload: string;
 }
+export interface IStartRequestAction {
+  type: BoardActionTypes.StartRequest;
+  payload: boolean;
+}
+
+export interface ISetErrorAction {
+  type: BoardActionTypes.SetError;
+  payload: string;
+}
 
 export type BoardActions =
   | ICreateCardAction
   | IRetrieveCardsAction
   | IUpdateCardAction
-  | IDeleteCardAction;
+  | IDeleteCardAction
+  | IStartRequestAction
+  | ISetErrorAction;
 
 export const createCardAction = (card: ICard): ICreateCardAction => ({
   type: BoardActionTypes.CreateCard,
@@ -51,4 +64,14 @@ export const updateCardAction = (card: ICard): IUpdateCardAction => ({
 export const deleteCardAction = (id: string): IDeleteCardAction => ({
   type: BoardActionTypes.DeleteCard,
   payload: id,
+});
+
+export const startRequestAction = (): IStartRequestAction => ({
+  type: BoardActionTypes.StartRequest,
+  payload: true,
+});
+
+export const setErrorAction = (error: string): ISetErrorAction => ({
+  type: BoardActionTypes.SetError,
+  payload: error,
 });

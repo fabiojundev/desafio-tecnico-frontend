@@ -2,11 +2,14 @@ import React, { useEffect, useReducer } from "react";
 import {
   initialState,
   retrieveCardsAction,
+  startRequestAction,
+  setErrorAction,
   boardReducer,
   BoardContext,
   // BoardState,
 } from "../../state";
 
+import { TopBar } from "../TopBar";
 import { ICard, Lista } from "../../types/card.type";
 import { Card } from "../Card";
 import {
@@ -29,11 +32,18 @@ function Board({ createCard, getCards, updateCard, deleteCard }: IBoardProps) {
 
   /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
+    dispatch(startRequestAction());
     const getAllCards = async () => {
-      const response = await getCards();
+      try {
+        const response = await getCards();
 
-      if (response) {
-        dispatch(retrieveCardsAction(response));
+        if (response) {
+          dispatch(retrieveCardsAction(response));
+        }
+      } catch (error) {
+        if (typeof error?.message === 'string') {
+          dispatch(setErrorAction(error.message));
+        }
       }
     };
 
@@ -60,6 +70,7 @@ function Board({ createCard, getCards, updateCard, deleteCard }: IBoardProps) {
   return (
     <BoardContext.Provider value={{ state, dispatch }}>
       <BoardContainer>
+        <TopBar loading={loading} msg={error} />
         <ListContainer>
           <ListHeader>
             <ListTitle>Novo</ListTitle>

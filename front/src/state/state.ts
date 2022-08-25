@@ -2,8 +2,8 @@ import { ICard } from "../types/card.type";
 
 export interface BoardState {
   cards: ICard[];
-  loading?: boolean;
-  error?: string;
+  loading: boolean;
+  error: string;
 }
 
 export const initialState: BoardState = {

@@ -1,4 +1,4 @@
-import { ICard } from "../types/card.type";
+import { ICard, Lista } from "../types/card.type";
 
 export interface BoardState {
   cards: ICard[];
@@ -10,4 +10,10 @@ export const initialState: BoardState = {
   cards: [],
   loading: false,
   error: "",
+};
+
+export const newCard: ICard = {
+  titulo: "",
+  conteudo: "",
+  lista: Lista.New,
 };

@@ -35,7 +35,7 @@ function Card({ card, createCard, updateCard, deleteCard }: ICardProps) {
         dispatch(createCardAction(response));
       }
     } catch (error) {
-      if (typeof error?.message === 'string') {
+      if (typeof error?.message === "string") {
         dispatch(setErrorAction(error.message));
       }
     }
@@ -51,7 +51,7 @@ function Card({ card, createCard, updateCard, deleteCard }: ICardProps) {
         dispatch(updateCardAction(response));
       }
     } catch (error) {
-      if (typeof error?.message === 'string') {
+      if (typeof error?.message === "string") {
         dispatch(setErrorAction(error.message));
       }
     }
@@ -67,11 +67,10 @@ function Card({ card, createCard, updateCard, deleteCard }: ICardProps) {
         dispatch(deleteCardAction(id));
       }
     } catch (error) {
-      if (typeof error?.message === 'string') {
+      if (typeof error?.message === "string") {
         dispatch(setErrorAction(error.message));
       }
     }
-
   };
 
   return (

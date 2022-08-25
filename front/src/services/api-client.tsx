@@ -75,7 +75,7 @@ const request = async (
       }
     }
     console.log("API access error", error);
-    throw(error);
+    throw error;
     /* eslint-enable */
   }
 

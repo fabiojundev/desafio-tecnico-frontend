@@ -1,6 +1,7 @@
 import React, { useEffect, useReducer } from "react";
 import {
   initialState,
+  newCard,
   retrieveCardsAction,
   startRequestAction,
   setErrorAction,
@@ -41,7 +42,7 @@ function Board({ createCard, getCards, updateCard, deleteCard }: IBoardProps) {
           dispatch(retrieveCardsAction(response));
         }
       } catch (error) {
-        if (typeof error?.message === 'string') {
+        if (typeof error?.message === "string") {
           dispatch(setErrorAction(error.message));
         }
       }
@@ -55,16 +56,10 @@ function Board({ createCard, getCards, updateCard, deleteCard }: IBoardProps) {
     return cards?.filter((c: ICard) => c.lista === list);
   };
 
-  const newCard: ICard = {
-    titulo: "",
-    conteudo: "",
-    lista: Lista.New,
-  };
-
   const lists = [
-    { id: "ToDo", label: "To Do" },
-    { id: "Doing", label: "Doing" },
-    { id: "Done", label: "Done" },
+    { id: Lista.ToDo, label: "To Do" },
+    { id: Lista.Doing, label: "Doing" },
+    { id: Lista.Done, label: "Done" },
   ];
 
   return (

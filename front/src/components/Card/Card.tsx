@@ -8,16 +8,18 @@ import {
   deleteCardAction,
   createCardAction,
 } from "../../state";
-import { createCard, updateCard, deleteCard } from "../../services/api-client";
 
 import CardEdit from "./CardEdit";
 import CardView from "./CardView";
 
 interface ICardProps {
   card: ICard;
+  createCard: (card: ICard) => Promise<ICard | undefined>;
+  updateCard: (card: ICard) => Promise<ICard | undefined>;
+  deleteCard: (id: string) => Promise<ICard[] | undefined>;
 }
 
-function Card({ card }: ICardProps) {
+function Card({ card, createCard, updateCard, deleteCard }: ICardProps) {
   const { dispatch } = useContext(BoardContext);
   const [isEditing, setEditing] = useState(false);
 

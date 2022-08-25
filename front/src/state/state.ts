@@ -6,4 +6,8 @@ export interface BoardState {
   error?: string;
 }
 
-export const initialState = { cards: [], loading: false, error: null };
+export const initialState: BoardState = {
+  cards: [],
+  loading: false,
+  error: "",
+};

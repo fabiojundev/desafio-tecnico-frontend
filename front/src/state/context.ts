@@ -7,5 +7,5 @@ export const BoardContext = React.createContext<{
   dispatch: React.Dispatch<BoardActions>;
 }>({
   state: initialState,
-  dispatch: () => undefined,
+  dispatch: (action: BoardActions) => undefined,
 });

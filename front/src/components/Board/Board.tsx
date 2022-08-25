@@ -1,5 +1,12 @@
-import { useContext } from "react";
-import { BoardContext } from "../../state";
+import React, { useEffect, useReducer } from "react";
+import {
+  initialState,
+  retrieveCardsAction,
+  boardReducer,
+  BoardContext,
+  // BoardState,
+} from "../../state";
+
 import { ICard, Lista } from "../../types/card.type";
 import { Card } from "../Card";
 import {
@@ -9,12 +16,33 @@ import {
   ListTitle,
 } from "./Board.styles";
 
-function Board() {
-  const { state } = useContext(BoardContext);
-  const { cards } = state;
+interface IBoardProps {
+  createCard(card: ICard): Promise<ICard | undefined>;
+  getCards(): Promise<ICard[] | undefined>;
+  updateCard(card: ICard): Promise<ICard | undefined>;
+  deleteCard(id: string): Promise<ICard[] | undefined>;
+}
+function Board({ createCard, getCards, updateCard, deleteCard }: IBoardProps) {
+  const [state, dispatch] = useReducer(boardReducer, initialState);
 
-  const getListCards = (list: string) => {
-    return cards?.filter((c) => c.lista === list);
+  const { cards, loading, error } = state;
+
+  /* eslint-disable react-hooks/exhaustive-deps */
+  useEffect(() => {
+    const getAllCards = async () => {
+      const response = await getCards();
+
+      if (response) {
+        dispatch(retrieveCardsAction(response));
+      }
+    };
+
+    getAllCards();
+  }, []);
+  /* eslint-enable */
+
+  const getListCards = (list: string): ICard[] => {
+    return cards?.filter((c: ICard) => c.lista === list);
   };
 
   const newCard: ICard = {
@@ -30,24 +58,37 @@ function Board() {
   ];
 
   return (
-    <BoardContainer>
-      <ListContainer>
-        <ListHeader>
-          <ListTitle>Novo</ListTitle>
-        </ListHeader>
-        <Card card={newCard} />
-      </ListContainer>
-      {lists.map((list) => (
-        <ListContainer key={list.id} title={list.label}>
+    <BoardContext.Provider value={{ state, dispatch }}>
+      <BoardContainer>
+        <ListContainer>
           <ListHeader>
-            <ListTitle>{list.label}</ListTitle>
+            <ListTitle>Novo</ListTitle>
           </ListHeader>
-          {getListCards(list.id).map((card) => (
-            <Card key={card.id} card={card} />
-          ))}
+          <Card
+            card={newCard}
+            createCard={createCard}
+            updateCard={updateCard}
+            deleteCard={deleteCard}
+          />
         </ListContainer>
-      ))}
-    </BoardContainer>
+        {lists.map((list) => (
+          <ListContainer key={list.id} title={list.label}>
+            <ListHeader>
+              <ListTitle>{list.label}</ListTitle>
+            </ListHeader>
+            {getListCards(list.id).map((card: ICard) => (
+              <Card
+                key={card.id}
+                card={card}
+                createCard={createCard}
+                updateCard={updateCard}
+                deleteCard={deleteCard}
+              />
+            ))}
+          </ListContainer>
+        ))}
+      </BoardContainer>
+    </BoardContext.Provider>
   );
 }
 

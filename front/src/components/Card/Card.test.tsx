@@ -1,4 +1,4 @@
-import { render, screen, cleanup, waitFor } from "@testing-library/react";
+import { render, screen, cleanup, waitFor, act } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import Card from "./Card";
 import { ICard, Lista } from "../../types/card.type";
@@ -26,9 +26,6 @@ const changedCard: ICard = {
 
 afterEach(cleanup);
 
-const handleCreate = jest.fn();
-const handleUpdate = jest.fn();
-const handleDelete = jest.fn();
 const title = /Título/i;
 const content = /Conteúdo/i;
 const add = /Adicionar/i;
@@ -39,20 +36,37 @@ const moveRight = /Mover p\/ Direita/i;
 const moveLeft = /Mover p\/ Esquerda/i;
 const trash = /Excluir/i;
 
-const customRender = (ocard: ICard) => {
-  return render(
-    <Card
-      card={ocard}
-      handleCreate={handleCreate}
-      handleUpdate={handleUpdate}
-      handleDelete={handleDelete}
-    />,
-  );
+interface RenderProps {
+  ocard: ICard;
+  createCardCB?(): Promise<ICard | undefined>;
+  updateCardCB?(): Promise<ICard | undefined>;
+  deleteCardCB?(): Promise<ICard[] | undefined>;
+}
+const customRender = async ({
+  ocard,
+  createCardCB,
+  updateCardCB,
+  deleteCardCB,
+}: RenderProps) => {
+  const createCard = jest.fn().mockReturnValue(card);
+  const updateCard = jest.fn().mockReturnValue(changedCard);
+  const deleteCard = jest.fn().mockReturnValue([]);
+
+  await act(async () => {
+    render(
+      <Card
+        card={ocard}
+        createCard={createCardCB || createCard}
+        updateCard={updateCardCB || updateCard}
+        deleteCard={deleteCardCB || deleteCard}
+      />,
+    );
+  });
 };
 
 describe("Render Cards", () => {
-  it("Renders create card", () => {
-    customRender(newCard);
+  it("Renders create card", async () => {
+    await customRender({ ocard: newCard });
 
     expect(screen.getByPlaceholderText(title)).toHaveValue(newCard.titulo);
     expect(screen.getByPlaceholderText(content)).toHaveValue(newCard.conteudo);
@@ -60,8 +74,8 @@ describe("Render Cards", () => {
     screen.getByTitle(add);
   });
 
-  it("Renders card on read mode", () => {
-    customRender(card);
+  it("Renders card on read mode", async () => {
+    await customRender({ ocard: card });
 
     screen.getByTitle(title);
     screen.getByTitle(content);
@@ -71,10 +85,12 @@ describe("Render Cards", () => {
     screen.getByTitle(moveRight);
   });
 
-  it("Renders card on edit mode", () => {
-    customRender(card);
+  it("Renders card on edit mode", async () => {
+    await customRender({ ocard: card });
 
-    userEvent.click(screen.getByTitle(edit));
+    await act(async () => {
+      userEvent.click(screen.getByTitle(edit));
+    });
 
     expect(screen.getByPlaceholderText(title)).toHaveValue(card.titulo);
     expect(screen.getByPlaceholderText(content)).toHaveValue(card.conteudo);
@@ -85,7 +101,7 @@ describe("Render Cards", () => {
 
 describe("Edit card", () => {
   it("Edit card and cancel", async () => {
-    customRender(card);
+    await customRender({ ocard: card });
 
     userEvent.click(screen.getByTitle(edit));
 
@@ -114,7 +130,9 @@ describe("Edit card", () => {
   });
 
   it("Edit card and save", async () => {
-    customRender(card);
+    const updateCard = jest.fn().mockReturnValue(changedCard);
+
+    await customRender({ ocard: card, updateCardCB: updateCard });
 
     userEvent.click(screen.getByTitle(edit));
 
@@ -129,9 +147,12 @@ describe("Edit card", () => {
       changedCard.conteudo,
     );
 
-    userEvent.click(screen.getByTitle(save));
-
-    customRender(changedCard);
+    await act(async () => {
+      userEvent.click(screen.getByTitle(save));
+    });
+    expect(updateCard.mock.calls.length).toBe(1);
+    cleanup();
+    await customRender({ ocard: changedCard, updateCardCB: updateCard });
 
     await waitFor(() => {
       expect(screen.getByTitle(title)).toHaveTextContent(changedCard.titulo);
